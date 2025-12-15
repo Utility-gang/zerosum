@@ -1,0 +1,13 @@
+package com.utilitygang.zerosum;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ZerosumApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
