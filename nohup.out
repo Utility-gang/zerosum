@@ -1,0 +1,25 @@
+2025-12-16 17:06:46,474 [   1036]   WARN - #c.i.i.s.p.i.BundledSharedIndexProvider - Bundled shared index is not found at: /Applications/IntelliJ IDEA CE.app/Contents/jdk-shared-indexes
+2025-12-16 17:06:46,538 [   1100]   WARN - #c.i.s.c.i.StationSocketConnectionLoop - RecentProjects connection failed with AnnotatedSocketException(SocketException) (No such file or directory: /var/folders/qm/08y5bz8s3wz1fwpv_8nthypm0000gp/T/jb.station.sam.sock)
+2025-12-16 17:06:50,719 [   5281]   WARN - #c.i.s.c.i.StationSocketConnectionLoop - Discovery connection failed with AnnotatedSocketException(SocketException) (No such file or directory: /var/folders/qm/08y5bz8s3wz1fwpv_8nthypm0000gp/T/jb.station.sam.sock)
+2025-12-16 17:06:51,099 [   5661]   WARN - #o.j.i.maven - updateAllMavenProjects started: incremental=true, MavenProjectsManagerEx.addManagedFilesWithProfilesAndUpdate zerosum
+JCEF_V(06:51:238): Found cef_server binary '/Applications/IntelliJ IDEA CE.app/Contents/jbr/Contents/Frameworks/cef_server.app/Contents/MacOS/cef_server' via System.getProperty('java.home')=/Applications/IntelliJ IDEA CE.app/Contents/jbr/Contents/Home
+JCEF_V(06:51:238): Java is started via native launcher. Found cef_server path /Applications/IntelliJ IDEA CE.app/Contents/jbr/Contents/Frameworks/cef_server.app/Contents/MacOS/cef_server (via system propety)
+JCEF_I(06:52:472): Found free tcp-port 6188 for server.
+JCEF_I(06:52:472): Found free tcp-port 6189 for java-handlers.
+JCEF_V(06:52:483): Created CefServer instance. Transport port=6188 (backward port=6189). Params:
+[--use-mock-keychain, --disable-features=SpareRendererForSitePerProcess, --main-bundle-path=/Applications/IntelliJ IDEA CE.app/Contents/jbr/Contents/Frameworks/jcef Helper.app, --disable-gpu-process-crash-limit, --disable-component-update, --browser-subprocess-path=/Applications/IntelliJ IDEA CE.app/Contents/jbr/Contents/Frameworks/jcef Helper.app/Contents/MacOS/jcef Helper, --autoplay-policy=no-user-gesture-required, --disable-in-process-stack-traces, --framework-dir-path=/Applications/IntelliJ IDEA CE.app/Contents/jbr/Contents/Frameworks/Chromium Embedded Framework.framework]| log_file=/Users/sam/Library/Logs/JetBrains/IdeaIC2025.2/jcef_13366.log, log_severity=LOGSEVERITY_DISABLE
+2025-12-16 17:06:54,386 [   8948]   WARN - #org.intellij.plugins.markdown.ui.preview.jcef.impl.JcefBrowserPipeImpl - No subscribers for documentReady!
+Attached data: 
+2025-12-16 17:06:55,225 [   9787]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:09,355 [  23917]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:15,226 [  29788]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:15,278 [  29840]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:15,292 [  29854]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:15,299 [  29861]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:15,317 [  29879]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:15,368 [  29930]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:15,658 [  30220]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:15,659 [  30221]   WARN - #c.i.o.v.ExternallyAddedFilesProcessorImpl - Cannot find project config directory for non-default and non-directory based project zerosum
+2025-12-16 17:07:16,426 [  30988]   WARN - #o.j.i.maven - updateAllMavenProjects finished: incremental=true, MavenProjectsManagerEx.addManagedFilesWithProfilesAndUpdate zerosum
+2025-12-16 17:07:40,583 [  55145]   WARN - org.apache.velocity.deprecation - configuration key 'resource.loader' has been deprecated in favor of 'resource.loaders'
+2025-12-16 17:07:40,584 [  55146]   WARN - org.apache.velocity.deprecation - configuration key 'includes.resource.loader.instance' has been deprecated in favor of 'resource.loader.includes.instance'
