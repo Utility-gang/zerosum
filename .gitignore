@@ -34,3 +34,4 @@ build/
 
 ### others ###
 **/.DS_store
+src/main/resources/application.yml
