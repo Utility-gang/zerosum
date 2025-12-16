@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "company")
+@Table(name = "companies")
 public class Company {
     @Id
     private String symbol;
