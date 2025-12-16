@@ -8,15 +8,14 @@ CREATE TABLE stocks (
     id bigserial PRIMARY KEY,
     amount INTEGER,
     owner_id BIGINT NOT NULL,
-    company_id BIGINT NOT NULL,
+    company_id TEXT NOT NULL,
     CONSTRAINT fk_user_stocks FOREIGN KEY (owner_id)
          REFERENCES users(id)
     CONSTRAINT fk_company_stocks FOREIGN KEY (company_id)
-         REFERENCES companies(id)
+         REFERENCES companies(symbol)
 );
 
 CREATE TABLE companies (
-    id bigserial PRIMARY KEY,
-    symbol TEXT NOT NULL UNIQUE,
+    symbol TEXT PRIMARY KEY,
     logo TEXT
 );
