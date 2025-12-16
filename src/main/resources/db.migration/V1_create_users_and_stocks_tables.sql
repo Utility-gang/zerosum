@@ -6,7 +6,7 @@ CREATE TABLE users (
 
 CREATE TABLE stocks (
     id bigserial PRIMARY KEY,
-    amount DOUBLE,
+    amount DOUBLE PRECISION,
     owner_id BIGINT NOT NULL,
     company_id TEXT NOT NULL,
     CONSTRAINT fk_user_stocks FOREIGN KEY (owner_id)
