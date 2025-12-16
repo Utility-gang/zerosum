@@ -9,12 +9,12 @@ import org.springframework.ui.Model;
 @Controller
 public class StockController {
     @PostMapping("/stocks/{id}/buy")
-    public RedirectView stocksBuy(@PathVariable Long id, @AuthenticationPrincipal OidcUser principal, Model model) {
+    public RedirectView stocksBuy(@PathVariable Long id, Model model) {
         return new RedirectView("/portfolio");
     }
 
     @PostMapping("/stocks/{id}/sell")
-    public RedirectView stocksSell(@PathVariable Long id, @AuthenticationPrincipal OidcUser principal, Model model) {
+    public RedirectView stocksSell(@PathVariable Long id, Model model) {
         return new RedirectView("/portfolio");
     }
 }
