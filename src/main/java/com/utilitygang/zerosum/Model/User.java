@@ -16,6 +16,6 @@ public class User {
 
     private String username;
 
-    // BigDecimal is the closest to sql's DECIMAL apparently
+    // BigDecimal is the best to use for currency apparently
     private BigDecimal cash;
 }
