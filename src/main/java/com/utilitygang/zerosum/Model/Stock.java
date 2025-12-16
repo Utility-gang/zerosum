@@ -13,11 +13,11 @@ public class Stock {
 
     private Double amount;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "company_id")
     private Company company;
 }
