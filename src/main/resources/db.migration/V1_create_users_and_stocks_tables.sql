@@ -1,12 +1,12 @@
 CREATE TABLE users (
     id bigserial PRIMARY KEY,
-    username varchar(50) NOT NULL UNIQUE,
+    username TEXT NOT NULL UNIQUE,
     cash Decimal(19,2)
 );
 
 CREATE TABLE stocks (
     id bigserial PRIMARY KEY,
-    symbol TEXT NOT NULL UNIQUE,
+    symbol TEXT NOT NULL,
     logo TEXT,
     last_change TIMESTAMP,
     amount INTEGER,
