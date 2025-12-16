@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id bigserial PRIMARY KEY,
     username varchar(50) NOT NULL UNIQUE,
-    cash Decimal(19,4)
+    cash Decimal(19,2)
 );
 
 CREATE TABLE stocks (
