@@ -33,7 +33,7 @@ public class StockController {
         BigDecimal stock_value = getPriceForStockAmount(company_id, amount);
         User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
         // find out if the user can actually afford the stock or not
-        if (owner.getCash() - stock_value < 0.0) {
+        if (owner.getCash().subtract(stock_value).compareTo(BigDecimal.ZERO) < 0) {
             attr.addFlashAttribute("msg", "You do not have enough money.");
         } else {
             Stock stock;
@@ -42,7 +42,7 @@ public class StockController {
             else
                 stock = stockRepo.findByOwnerAndCompanySymbol(owner, company_id).get();
             stockRepo.save(stock);
-            owner.setCash(owner.getCash() - stock_value);
+            owner.setCash(owner.getCash().subtract(stock_value));
         }
         return "redirect:" + req.getHeader("Referer");
     }
@@ -62,7 +62,7 @@ public class StockController {
             if (stock.getAmount() < amount) {
                 attr.addFlashAttribute("msg", "You do not hold this much " + company_id + " stock.");
             } else {
-                owner.setCash(owner.getCash() + stock_value);
+                owner.setCash(stock_value.add(owner.getCash()));
                 stock.setAmount(stock.getAmount() - amount);
                 stockRepo.save(stock);
             }
