@@ -34,11 +34,6 @@ public class FinnhubClient extends WebSocketClient {
     }
 
     @Override
-    public void onMessage(ByteBuffer message) {
-        System.out.println("received ByteBuffer");
-    }
-
-    @Override
     public void onError(Exception ex) {
         System.err.println("an error occurred:" + ex);
     }
