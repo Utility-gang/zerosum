@@ -1,5 +1,6 @@
 package com.utilitygang.zerosum.client;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -62,7 +63,8 @@ public class FinnhubClient extends WebSocketClient {
 
         // extract the symbol (ticker) and the price from the trade info
         String symbol = trade.getString("s");
-        Double price = trade.getDouble("p");
+        Double priceTemp = trade.getDouble("p");
+        BigDecimal price = new BigDecimal(priceTemp);
 
         PriceData.setPrice(symbol, price);
     }
