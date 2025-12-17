@@ -6,6 +6,8 @@ import java.nio.ByteBuffer;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class FinnhubClient extends WebSocketClient {
 
@@ -29,8 +31,14 @@ public class FinnhubClient extends WebSocketClient {
     }
 
     @Override
-    public void onMessage(String message) {
-        System.out.println("received message: " + message);
+    public void onMessage(String response) {
+        JSONObject root = new JSONObject(response);
+        JSONArray data = root.getJSONArray("data");
+        JSONObject trade = data.getJSONObject(0);
+        String symbol = trade.getString("s");
+        Double price = trade.getDouble("p");
+
+        System.out.println("Symbol: " + symbol + " Price: " + price);
     }
 
     @Override
