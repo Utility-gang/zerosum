@@ -4,6 +4,7 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
+import com.utilitygang.zerosum.Data.PriceData;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
@@ -56,7 +57,7 @@ public class FinnhubClient extends WebSocketClient {
         String symbol = trade.getString("s");
         Double price = trade.getDouble("p");
 
-        System.out.println("Symbol: " + symbol + " Price: " + price);
+        PriceData.setPrice(symbol, price);
     }
 
     @Override
