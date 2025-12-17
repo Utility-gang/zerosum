@@ -1,5 +1,6 @@
-package com.utilitygang.zerosum.Data;
+package com.utilitygang.zerosum.data;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,5 +22,12 @@ public class PriceData {
     // a millisecond before you try to access it
     public static Double getPrice(String symbol) {
         return prices.getOrDefault(symbol, 0.0);
+    }
+
+    public static BigDecimal getPriceForStockAmount(String symbol, Double quantity) {
+        Double pricePerUnit = getPrice(symbol);
+        Double total = pricePerUnit * quantity;
+
+        return new BigDecimal(total);
     }
 }
