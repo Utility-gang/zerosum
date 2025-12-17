@@ -65,7 +65,6 @@ public class FinnhubClient extends WebSocketClient {
         Double price = trade.getDouble("p");
 
         PriceData.setPrice(symbol, price);
-        System.out.println(response);
     }
 
     @Override
