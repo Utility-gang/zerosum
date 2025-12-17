@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ZeroSum`</title>
+</head>
+<body>
+    <div th:each="company :${companies}">
+            <img th:src="${company.logo}">
+            <p th:text="${company.symbol}"></p>
+            <p th:text="${company.currPrice}"></p>
+            <button>Buy</button>
+    </div>
+</body>
+</html>
