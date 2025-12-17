@@ -44,7 +44,7 @@ public class FinnhubClient extends WebSocketClient {
             return;
         }
 
-        // if it is "type":"data" we get the data array
+        // if it is "type":"trade" we get the data array
         // which contains all the trade info
         JSONArray data = root.getJSONArray("data");
 
