@@ -2,10 +2,14 @@ package com.utilitygang.zerosum.Client;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
+import com.utilitygang.zerosum.Data.PriceData;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class FinnhubClient extends WebSocketClient {
 
@@ -29,8 +33,31 @@ public class FinnhubClient extends WebSocketClient {
     }
 
     @Override
-    public void onMessage(String message) {
-        System.out.println("received message: " + message);
+    public void onMessage(String response) {
+        // get the head of the JSON object
+        JSONObject root = new JSONObject(response);
+
+        // check the 'type' property as sometimes it just sends
+        // "type":"ping" so ignore those
+        String type = root.getString("type");
+        if (!Objects.equals(type, "trade")) {
+            return;
+        }
+
+        // if it is "type":"trade" we get the data array
+        // which contains all the trade info
+        JSONArray data = root.getJSONArray("data");
+
+        // get the trade at index 0 because sometimes it sends
+        // multiple but we hope (?) that the price doesnt change
+        // in that time
+        JSONObject trade = data.getJSONObject(0);
+
+        // extract the symbol (ticker) and the price from the trade info
+        String symbol = trade.getString("s");
+        Double price = trade.getDouble("p");
+
+        PriceData.setPrice(symbol, price);
     }
 
     @Override
