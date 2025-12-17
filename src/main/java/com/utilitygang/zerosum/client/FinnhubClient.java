@@ -1,10 +1,9 @@
-package com.utilitygang.zerosum.Client;
+package com.utilitygang.zerosum.client;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import com.utilitygang.zerosum.Data.PriceData;
+import com.utilitygang.zerosum.data.PriceData;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
