@@ -19,8 +19,3 @@ CREATE TABLE stocks (
     CONSTRAINT fk_company_stocks FOREIGN KEY (company_id)
          REFERENCES companies(symbol)
 );
-
-CREATE TABLE companies (
-    symbol TEXT PRIMARY KEY,
-    logo TEXT
-);
