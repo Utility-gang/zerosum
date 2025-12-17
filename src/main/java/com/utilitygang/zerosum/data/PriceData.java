@@ -1,4 +1,4 @@
-package com.utilitygang.zerosum.Data;
+package com.utilitygang.zerosum.data;
 
 import java.math.BigDecimal;
 import java.util.*;
