@@ -1,4 +1,4 @@
-package com.utilitygang.zerosum.Model;
+package com.utilitygang.zerosum.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
