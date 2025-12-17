@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="stocks")
+@Table(name = "stocks")
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +20,10 @@ public class Stock {
     @ManyToOne(optional = false)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    public Stock(Double amount, User owner, Company company) {
+        this.amount = amount;
+        this.owner = owner;
+        this.company = company;
+    }
 }
