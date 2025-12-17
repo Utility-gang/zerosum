@@ -1,4 +1,4 @@
-package com.utilitygang.zerosum.Data;
+package com.utilitygang.zerosum.data;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

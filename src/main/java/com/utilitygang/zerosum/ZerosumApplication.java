@@ -1,6 +1,6 @@
 package com.utilitygang.zerosum;
 
-import com.utilitygang.zerosum.Client.FinnhubClient;
+import com.utilitygang.zerosum.client.FinnhubClient;
 import org.java_websocket.client.WebSocketClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
