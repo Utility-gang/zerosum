@@ -1,20 +1,17 @@
 package com.utilitygang.zerosum;
 
-import com.utilitygang.zerosum.client.FinnhubClient;
-import org.java_websocket.client.WebSocketClient;
+import com.utilitygang.zerosum.service.FinnhubService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.net.URI;
-import java.net.URISyntaxException;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class ZerosumApplication {
 
-	public static void main(String[] args) throws URISyntaxException {
-        WebSocketClient client = new FinnhubClient(new URI("wss://ws.finnhub.io?token=d518fghr01qjia5c0t00d518fghr01qjia5c0t0g"));
-        client.connect();
+	public static void main(String[] args) throws Exception {
+        ConfigurableApplicationContext context = SpringApplication.run(ZerosumApplication.class, args);
 
-        SpringApplication.run(ZerosumApplication.class, args);
+        FinnhubService finnhubService = context.getBean(FinnhubService.class);
+        finnhubService.start();
 	}
 }
