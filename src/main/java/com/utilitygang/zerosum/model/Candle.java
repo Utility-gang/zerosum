@@ -1,3 +1,4 @@
+
 package com.utilitygang.zerosum.model;
 
 public class Candle {
