@@ -5,11 +5,10 @@
     <title>ZeroSum`</title>
 </head>
 <body>
+
     <div th:each="company :${companies}">
-            <img th:src="${company.logo}">
-            <p th:text="${company.symbol}"></p>
-            <p th:text="${company.currPrice}"></p>
-            <button>Buy</button>
+        <div th:replace="fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})"></div>
+        <button>Buy</button>
     </div>
 </body>
 </html>
