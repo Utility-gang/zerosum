@@ -2,28 +2,36 @@ package com.utilitygang.zerosum.client;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.utilitygang.zerosum.data.PriceData;
+import com.utilitygang.zerosum.model.Company;
+import com.utilitygang.zerosum.repository.CompanyRepository;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FinnhubClient extends WebSocketClient {
 
-    public FinnhubClient(URI serverUri, Draft draft) {
-        super(serverUri, draft);
-    }
+    private final CompanyRepository companyRepository;
 
-    public FinnhubClient(URI serverURI) {
-        super(serverURI);
+    public FinnhubClient(URI serverUri, CompanyRepository companyRepository) {
+        super(serverUri);
+        this.companyRepository = companyRepository;
     }
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        send("{\"type\":\"subscribe\",\"symbol\":\"BINANCE:BTCUSDT\"}");
+        List<Company> companies = companyRepository.findAll();
+        for (Company company : companies) {
+            String query = String.format("{\"type\":\"subscribe\",\"symbol\":\"%s\"}", company.getSymbol());
+            send(query);
+        }
         System.out.println("new websocket connection opened");
     }
 

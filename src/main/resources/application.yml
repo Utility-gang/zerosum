@@ -4,6 +4,6 @@ spring:
 
 okta:
   oauth2:
-    issuer: https://dev-0zd5fy8um0cuow0o.us.auth0.com/
+    issuer: ${OKTA_ISSUER}
     client-id: ${OKTA_CLIENT_ID}
     client-secret: ${OKTA_CLIENT_SECRET}
