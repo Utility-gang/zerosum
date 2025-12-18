@@ -23,4 +23,11 @@ public class PriceData {
     public static BigDecimal getPrice(String symbol) {
         return prices.getOrDefault(symbol, new BigDecimal(0.0));
     }
+
+    public static BigDecimal getPriceForStockAmount(String symbol, Double quantity) {
+        Double pricePerUnit = getPrice(symbol);
+        Double total = pricePerUnit * quantity;
+
+        return new BigDecimal(total);
+    }
 }
