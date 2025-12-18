@@ -1,0 +1,16 @@
+<form th:fragment="buy(symbol, currPrice)" th:action="@{/stocks/{symbol}/buy(symbol=${symbol})}" method="post">
+    <label for="amount">Quantity: </label>
+    <input type="number"
+           class="buy-amount-input"
+           name="amount"
+           value="0.00"
+           step="0.05"
+           min="0.00"
+           required
+           th:data-curr-price="${currPrice}"
+           th:data-target-id="${symbol} + '-buying-cost'" />
+<!--       these data attrs are used to update the Cost span-->
+
+    <p>Cost: <span th:id="${symbol} + '-buying-cost'">0.00</span></p>
+    <button type="submit">Buy</button>
+</form>

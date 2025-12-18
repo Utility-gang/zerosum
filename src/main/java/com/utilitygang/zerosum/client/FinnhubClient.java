@@ -32,6 +32,10 @@ public class FinnhubClient extends WebSocketClient {
             String query = String.format("{\"type\":\"subscribe\",\"symbol\":\"%s\"}", company.getSymbol());
             send(query);
         }
+//        plz leave this line commented out but dont delete, its useful for
+//        debugging/checking if the websocket is opened properly
+
+//        send("{\"type\":\"subscribe\",\"symbol\":\"BINANCE:BTCUSDT\"}");
         System.out.println("new websocket connection opened");
     }
 
@@ -66,6 +70,10 @@ public class FinnhubClient extends WebSocketClient {
         BigDecimal price = new BigDecimal(trade.getDouble("p"));
 
         PriceData.setPrice(symbol, price);
+
+//        same here, leave commented but dont delete
+
+//        System.out.println(response);
     }
 
     @Override

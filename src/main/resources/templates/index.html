@@ -7,8 +7,10 @@
 <body>
 
     <div th:each="company :${companies}">
-        <div th:replace="fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})"></div>
-        <button>Buy</button>
+        <div th:replace="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})}"></div>
+        <div th:replace="~{fragments/buyButton.html :: buy(${company.symbol}, ${company.currPrice})}"></div>
     </div>
+
+<script th:src="@{/main.js}"></script>
 </body>
 </html>
