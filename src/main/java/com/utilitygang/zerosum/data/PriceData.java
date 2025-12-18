@@ -25,7 +25,7 @@ public class PriceData {
     }
 
     public static BigDecimal getPriceForStockAmount(String symbol, Double quantity) {
-        Double pricePerUnit = getPrice(symbol);
+        Double pricePerUnit = getPrice(symbol).doubleValue();
         Double total = pricePerUnit * quantity;
 
         return new BigDecimal(total);
