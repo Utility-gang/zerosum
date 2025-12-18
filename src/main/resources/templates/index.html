@@ -33,13 +33,15 @@
     </div>
 
     <!-- Stocks Grid -->
-    <div class="grid grid-cols-1 md: grid-cols-2 lg: grid-cols-3 xl:grid-cols-4 gap-6">
-        <div th:each="company : ${companies}"
-             class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+    <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-sm mx-auto md:max-w-none">
 
-            <!-- Stock Card Content -->
-            <div class="p-6">
-                <!-- Stock Fragment -->
+
+    <div th:each="company : ${companies}"
+         class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden m-2 sm:m-0 max-w-sm mx-auto">
+
+    <!-- Stock Card Content -->
+        <div class="p-4 sm:p-6">
+        <!-- Stock Fragment -->
                 <div th:replace="fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})"></div>
 
                 <!-- Buy Button -->
