@@ -63,8 +63,7 @@ public class FinnhubClient extends WebSocketClient {
 
         // extract the symbol (ticker) and the price from the trade info
         String symbol = trade.getString("s");
-        Double priceTemp = trade.getDouble("p");
-        BigDecimal price = new BigDecimal(priceTemp);
+        BigDecimal price = new BigDecimal(trade.getDouble("p"));
 
         PriceData.setPrice(symbol, price);
     }
