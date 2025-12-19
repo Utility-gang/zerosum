@@ -23,4 +23,7 @@ public class User {
         this.username = username;
         this.cash = new BigDecimal(50000.0);
     }
+
+    public User() {
+    }
 }

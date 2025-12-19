@@ -1,6 +1,8 @@
 package com.utilitygang.zerosum.service;
+
 import com.utilitygang.zerosum.client.FinnhubClient;
 import com.utilitygang.zerosum.repository.CompanyRepository;
+import io.github.cdimascio.dotenv.Dotenv;
 import com.utilitygang.zerosum.model.Quote;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;

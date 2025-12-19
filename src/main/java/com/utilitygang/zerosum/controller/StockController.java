@@ -10,14 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import jakarta.servlet.http.HttpServletRequest;
-
-
-import com.utilitygang.zerosum.model.MarketPrice;
-import com.utilitygang.zerosum.repository.MarketPriceRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 import com.utilitygang.zerosum.model.*;
 import com.utilitygang.zerosum.repository.*;
@@ -74,20 +68,5 @@ public class StockController {
             }
         }
         return "redirect:" + req.getHeader("Referer");
-    }
-}
-
-@RestController
-public class StockController {
-
-    private final MarketPriceRepository repo;
-
-    public StockController(MarketPriceRepository repo) {
-        this.repo = repo;
-    }
-
-    @GetMapping("/stocks")
-    public List<MarketPrice> getStocks() {
-        return repo.findAll();
     }
 }

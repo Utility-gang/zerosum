@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroSum - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
+
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg: px-8 py-8">
+    <!-- Hero Section -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">Available Stocks</h1>
+        <p class="text-gray-600">Browse and trade stocks in real-time</p>
+    </div>
+
+    <!-- Flash Message -->
+    <div th:if="${msg}" class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm text-red-700" th:text="${msg}"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stocks Grid -->
+    <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-sm mx-auto md:max-w-none">
+
+
+    <div th:each="company : ${companies}"
+         class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden m-2 sm:m-0 max-w-sm mx-auto">
+
+    <!-- Stock Card Content -->
+        <div class="p-4 sm:p-6">
+        <!-- Stock Fragment -->
+                <div th:replace="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})}"></div>
+
+                <!-- Buy Button -->
+                <form th:action="@{/stocks/{symbol}/buy(symbol=${company.symbol})}" method="post" class="mt-4 space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                         <input type="number"
+                               name="amount"
+                               min="1"
+                               step="1"
+                               placeholder="1"
+                               required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-sm">
+                    </div>
+                    <button type="submit"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 shadow-sm hover:shadow-md">
+                        Buy Stock
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(companies)}"
+         class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-. 707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No stocks available</h3>
+        <p class="mt-1 text-sm text-gray-500">Check back later for available stocks. </p>
+    </div>
+</div>
+</body>
+</html>
