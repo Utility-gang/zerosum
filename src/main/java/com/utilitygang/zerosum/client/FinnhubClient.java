@@ -4,17 +4,14 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.utilitygang.zerosum.data.PriceData;
 import com.utilitygang.zerosum.model.Company;
 import com.utilitygang.zerosum.repository.CompanyRepository;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class FinnhubClient extends WebSocketClient {
 
@@ -29,11 +26,7 @@ public class FinnhubClient extends WebSocketClient {
     public void onOpen(ServerHandshake handshakedata) {
         List<Company> companies = companyRepository.findAll();
         for (Company company : companies) {
-            // when the server starts up, send a subscription req
-            // to the websocket and also update the cached price
-            // from the quote endpoint
             sendSubscriptionRequest(company);
-            updateCachedPrice(company);
         }
         System.out.println("new websocket connection opened");
     }
@@ -79,9 +72,5 @@ public class FinnhubClient extends WebSocketClient {
     private void sendSubscriptionRequest(Company company) {
         String query = String.format("{\"type\":\"subscribe\",\"symbol\":\"%s\"}", company.getSymbol());
         send(query);
-    }
-
-    private void updateCachedPrice(Company company) {
-
     }
 }

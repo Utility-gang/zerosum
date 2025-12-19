@@ -14,6 +14,9 @@ public class Company {
     private String symbol;
 
     private String logo;
+    
+    @Column(name = "cached_price")
+    private BigDecimal cachedPrice;
 
     public Company() {
     };
