@@ -16,8 +16,8 @@ import com.utilitygang.zerosum.repository.UserRepository;
 
 import java.io.IOException;
 
-// @Configuration
-// @EnableWebSecurity
+@Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 
     @Value("${okta.oauth2.issuer}")
