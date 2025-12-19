@@ -1,18 +1,18 @@
 package com.utilitygang.zerosum.config;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.utilitygang.zerosum.model.User;
+import com.utilitygang.zerosum.repository.UserRepository;
 
 import java.io.IOException;
 
@@ -24,6 +24,8 @@ public class SecurityConfiguration {
     private String issuer;
     @Value("${okta.oauth2.client-id}")
     private String clientId;
+    @Autowired
+    private UserRepository userRepo;
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -33,28 +35,25 @@ public class SecurityConfiguration {
                         .requestMatchers("/", "/images/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new AuthenticationSuccessHandler() {
-                            @Override
-                            public void onAuthenticationSuccess(HttpServletRequest request,
-                                    HttpServletResponse response, Authentication authentication)
-                                    throws IOException, ServletException {
-                                response.sendRedirect("/users/after-login");
-                            }
+                        .successHandler((request, response, authentication) -> {
+                            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+                            String email = oidcUser.getEmail();
+
+                            userRepo.findUserByUsername(email)
+                                    .orElseGet(() -> userRepo.save(new User(email)));
+
+                            response.sendRedirect("/portfolio");
                         }))
 
                 .logout(logout -> logout
-                        .addLogoutHandler(logoutHandler()));
-        return http.build();
-    }
+                        .logoutSuccessHandler((req, response, auth) -> {
+                            String baseUrl = ServletUriComponentsBuilder
+                                    .fromCurrentContextPath()
+                                    .build()
+                                    .toUriString();
 
-    private LogoutHandler logoutHandler() {
-        return (request, response, authentication) -> {
-            try {
-                String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + baseUrl);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
+                            response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + baseUrl);
+                        }));
+        return http.build();
     }
 }

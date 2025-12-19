@@ -9,14 +9,13 @@ additionally, you need an auth0 application setup.
 
 ## running
 
-first of all, create an auth0 account, and create a new application. then you should be able to put your domain, client_id and client_secret in application.yml, like so:
+first of all, create an auth0 account, and create a new application. then you should put your api keys in a new file called .env, like so:
 
 ```
-okta:
-  oauth2:
-    issuer: ${DOMAIN}
-    client-id: ${CLIENT_ID}
-    client-secret: ${CLIENT_SECRET}
+OKTA_ISSUER=
+OKTA_CLIENT_ID=
+OKTA_CLIENT_SECRET=
+FINNHUB_API_KEY=
 ```
 
 then install mavern and postgresql (make sure it's running). then, create a new table called zero sum using this command:

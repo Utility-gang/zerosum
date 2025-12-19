@@ -3,15 +3,17 @@ package com.utilitygang.zerosum.repository;
 import com.utilitygang.zerosum.model.Company;
 import com.utilitygang.zerosum.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import java.util.List;
 
 public interface CompanyRepository extends JpaRepository<Company, String> {
     boolean existsBySymbolIgnoreCase(String symbol);
 
-    interface UserRepository extends JpaRepository<User, Long> {
-        Optional<User> findByUsernameIgnoreCase(String username);
-
-        boolean existsByUsernameIgnoreCase(String username);
-    }
+    @Query("""
+                select distinct s.company
+                from Stock s
+                where s.owner = :owner
+            """)
+    List<Company> findAllByStockOwner(@Param("owner") User owner);
 }
