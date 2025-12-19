@@ -50,7 +50,9 @@ public class IndexController {
                 System.out.println("🔍 DEBUG: Total portfolio value: " + totalPortfolioValue);
 
                 NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+                model.addAttribute("zeroMoney", currencyFormatter.format(0));
                 model.addAttribute("totalPortfolioValue", currencyFormatter.format(totalPortfolioValue));
+                model.addAttribute("totalPortfolioValueNum", totalPortfolioValue);
                 model.addAttribute("user", user);
             } else {
                 System.out.println("⚠️ DEBUG: User not found in database for email: " + email);
