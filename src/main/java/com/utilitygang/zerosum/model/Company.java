@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -28,5 +29,19 @@ public class Company {
         this.symbol = symbol;
         this.logo = logo;
         this.currPrice = PriceData.getPrice(symbol);
+    }
+
+    //override the lombok getter for price so that it returns
+    //the live price if we have one and if not, returns the cached price
+    public BigDecimal getCurrPrice() {
+        BigDecimal livePrice = PriceData.getPrice(this.symbol);
+
+        //signum returns 1 or -1 if the number is pos/neg but will
+        // return 0 if number is zero regardless of scale
+        if (livePrice != null && livePrice.signum() != 0) {
+            return livePrice;
+        }
+
+        return (cachedPrice != null) ? cachedPrice : BigDecimal.ZERO;
     }
 }
