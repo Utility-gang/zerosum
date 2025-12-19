@@ -9,7 +9,6 @@
     <div th:each="company :${companies}">
         <div th:replace="fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})"></div>
         <button>Buy</button>
-        <div th:replace="fragments/sell-button.html"></div>
     </div>
 </body>
 </html>
