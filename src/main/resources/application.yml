@@ -2,14 +2,8 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
-okta:
-  oauth2:
-    issuer: ${OKTA_ISSUER}
-    client-id: ${OKTA_CLIENT_ID}
-    client-secret: ${OKTA_CLIENT_SECRET}
-
-
-finnhub:
-  api-key: d50n631r01qm94qn11m0d50n631r01qm94qn11mg
-  base-url: https://fiinnhub.io/api/v1
-  ws-url: wss://ws.finnhub.io
+#okta:
+ # oauth2:
+  # issuer: ${OKTA_ISSUER}
+    #client-id: ${OKTA_CLIENT_ID}
+    #client-secret: ${OKTA_CLIENT_SECRET}
