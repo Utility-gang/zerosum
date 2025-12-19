@@ -11,4 +11,11 @@ public class Company {
     private String symbol;
 
     private String logo;
+
+    public Company() {};
+
+    public Company(String symbol, String logo) {
+        this.symbol = symbol;
+        this.logo = logo;
+    }
 }
