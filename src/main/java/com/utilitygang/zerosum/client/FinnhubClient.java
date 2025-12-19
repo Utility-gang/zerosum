@@ -29,8 +29,11 @@ public class FinnhubClient extends WebSocketClient {
     public void onOpen(ServerHandshake handshakedata) {
         List<Company> companies = companyRepository.findAll();
         for (Company company : companies) {
-            String query = String.format("{\"type\":\"subscribe\",\"symbol\":\"%s\"}", company.getSymbol());
-            send(query);
+            // when the server starts up, send a subscription req
+            // to the websocket and also update the cached price
+            // from the quote endpoint
+            sendSubscriptionRequest(company);
+            updateCachedPrice(company);
         }
         System.out.println("new websocket connection opened");
     }
@@ -71,5 +74,14 @@ public class FinnhubClient extends WebSocketClient {
     @Override
     public void onError(Exception ex) {
         System.err.println("an error occurred:" + ex);
+    }
+
+    private void sendSubscriptionRequest(Company company) {
+        String query = String.format("{\"type\":\"subscribe\",\"symbol\":\"%s\"}", company.getSymbol());
+        send(query);
+    }
+
+    private void updateCachedPrice(Company company) {
+
     }
 }
