@@ -26,4 +26,7 @@ public class Stock {
         this.owner = owner;
         this.company = company;
     }
+
+    public Stock() {
+    }
 }

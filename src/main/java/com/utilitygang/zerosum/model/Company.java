@@ -15,7 +15,8 @@ public class Company {
 
     private String logo;
 
-    public Company() {};
+    public Company() {
+    };
 
     @Transient
     private BigDecimal currPrice;
