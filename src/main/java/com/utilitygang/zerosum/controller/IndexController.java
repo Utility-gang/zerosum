@@ -5,6 +5,9 @@ import com.utilitygang.zerosum.model.User;
 import com.utilitygang.zerosum.repository.CompanyRepository;
 import com.utilitygang.zerosum.repository.UserRepository;
 import com.utilitygang.zerosum.service.PortfolioService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -29,10 +32,13 @@ public class IndexController {
     @Autowired
     PortfolioService portfolioService;
 
-    @GetMapping("/")
-    public String index(Model model, @AuthenticationPrincipal DefaultOidcUser principal) {
-        List<Company> companies = companyRepository.findAll();
-        model.addAttribute("companies", companies);
+    @GetMapping({ "/", "/portfolio" })
+    public String indexAndPortfolio(Model model, @AuthenticationPrincipal DefaultOidcUser principal,
+            HttpServletRequest req) {
+        // use this to do the couple of changes in logic
+        boolean isRoot = req.getRequestURI().equals("/");
+        if (isRoot)
+            model.addAttribute("companies", companyRepository.findAll());
 
         // DEBUG: Log authentication status
         System.out.println("🔍 DEBUG: principal is " + (principal == null ? "NULL" : "NOT NULL"));
@@ -46,6 +52,10 @@ public class IndexController {
             System.out.println("🔍 DEBUG: User from database: " + (user == null ? "NULL" : user.getUsername()));
 
             if (user != null) {
+                // add all the companies that the user has bought
+                if (!isRoot)
+                    model.addAttribute("companies", companyRepository.findAllByStockOwner(user));
+
                 BigDecimal totalPortfolioValue = portfolioService.calculateTotalPortfolioValue(user);
                 System.out.println("🔍 DEBUG: Total portfolio value: " + totalPortfolioValue);
 
