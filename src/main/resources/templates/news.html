@@ -28,5 +28,25 @@
             </div>
         </div>
 
+        <!-- page controller -->
+        <div class="pagination">
+
+            <a th:if="${currentPage > 0}"
+               th:href="@{/news(page=${currentPage - 1})}">
+                ← Previous
+            </a>
+
+            <span>
+                Page <span th:text="${currentPage + 1}"></span>
+                of <span th:text="${totalPages}"></span>
+            </span>
+
+            <a th:if="${currentPage + 1 < totalPages}"
+               th:href="@{/news(page=${currentPage + 1})}">
+                Next →
+            </a>
+
+        </div>
+
     </div>
 </body>
