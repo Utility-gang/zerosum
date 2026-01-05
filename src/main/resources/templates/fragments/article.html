@@ -1,0 +1,7 @@
+<div th:fragment="article(imageUrl, headline, source, summary, url)">
+    <img th:src="${imageUrl}">
+    <p th:text="${headline}"></p>
+    <p>Source: <span th:text="${source}"></span></p>
+    <p th:text="${summary}"></p>
+    <a th:href="${url}">Read More</a>
+</div>

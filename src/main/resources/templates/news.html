@@ -10,10 +10,14 @@
     <!-- Include navbar -->
     <div th:replace="~{fragments/navbar.html :: navbar}"></div>
     <p>News</p>
-    <ul th:each="newsArticle : ${newsArticles}">
-       <li>
-           <img th:src="${newsArticle.imageUrl}">
-           <p th:text="${newsArticle.headline}"></p>
-       </li>
-    </ul>
+
+    <!-- article grid -->
+    <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-sm mx-auto md:max-w-none">
+        <div th:each="newsArticle : ${newsArticles}"
+            class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden m-2 sm:m-0 max-w-sm mx-auto">
+            <div class="p-4 sm:p-6">
+               <div th:replace="~{fragments/article.html :: article(${newsArticle.imageUrl}, ${newsArticle.headline}, ${newsArticle.source}, ${newsArticle.summary}, ${newsArticle.url})}"></div>
+            </div>
+        </div>
+    </div>
 </body>
