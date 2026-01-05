@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
@@ -16,9 +17,9 @@ public class NewsController {
     FinnhubService finnhubService;
 
     @GetMapping({ "/news" })
-    public String news() throws Exception {
+    public String news(Model model) throws Exception {
         List<Map<String, Object>> news = finnhubService.fetchNews();
-        System.out.println(news);
+        model.addAttribute(news);
         return "news";
     }
 }
