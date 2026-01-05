@@ -68,8 +68,12 @@
                         <script th:inline="javascript">
                             document.getElementById("amount-selector-" + [[${company.symbol}]])
                                 .addEventListener("change", (e) => {
+                                    const formatter = new Intl.NumberFormat(
+                                        "en-US",
+                                        { style: "currency", currency: "USD", }
+                                    );
                                     document.getElementById("amount-display-" + [[${company.symbol}]])
-                                        .innerText = e.currentTarget.value;
+                                        .innerText = formatter.format(e.currentTarget.value);
                                 });
                         </script>
                     </div>

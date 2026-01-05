@@ -50,6 +50,8 @@ public class IndexController {
                 System.out.println("🔍 DEBUG: Total portfolio value: " + totalPortfolioValue);
 
                 NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+                // could be done with JS,
+                // but this way slider works if JS is disabled
                 model.addAttribute("zeroMoney", currencyFormatter.format(0));
                 model.addAttribute("totalPortfolioValue", currencyFormatter.format(totalPortfolioValue));
                 model.addAttribute("totalPortfolioValueNum", totalPortfolioValue);
