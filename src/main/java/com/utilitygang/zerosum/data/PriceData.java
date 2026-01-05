@@ -16,14 +16,15 @@ public class PriceData {
     // as its thread safe when doing lots of concurrent reads/writes, imagine
     // it utilises some sort of lock
     // https://www.baeldung.com/java-concurrent-map
-    private static Map<String, BigDecimal> prices = new ConcurrentHashMap<>();
+    private static Map<String, List<BigDecimal>> prices = new ConcurrentHashMap<>();
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Path file = Paths.get("prices.json");
 
     public static void deserialise() {
+
         try {
             // this really wants me to handle the exceptions
-            prices = mapper.readValue(file.toFile(), new TypeReference<Map<String, BigDecimal>>() {
+            prices = mapper.readValue(file.toFile(), new TypeReference<ConcurrentHashMap<String, List<BigDecimal>>>() {
             });
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -33,23 +34,26 @@ public class PriceData {
     public static void serialise() {
         try {
             // this really wants me to handle the exceptions
-            mapper.writeValue(file.toFile(), new ConcurrentHashMap<String, BigDecimal>(prices));
+            mapper.writeValue(file.toFile(), new ConcurrentHashMap<String, List<BigDecimal>>(prices));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
     public static void setPrice(String symbol, BigDecimal price) {
-        if (symbol != null && price != null) {
-            prices.put(symbol, price);
-        }
+        prices.computeIfAbsent(symbol, k -> Collections.synchronizedList(new ArrayList<>())).add(price);
     }
 
-    // 'getOrDefault' method is recommended instead of 'get' for 'ConcurrentHashMap'
-    // because you always have a value to read even if a write has removed the value
-    // a millisecond before you try to access it
     public static BigDecimal getPrice(String symbol) {
-        return prices.getOrDefault(symbol, new BigDecimal(0.0));
+        List<BigDecimal> list = prices.get(symbol);
+        if (list == null)
+            return null;
+
+        synchronized (list) {
+            return list.isEmpty()
+                    ? null
+                    : list.get(list.size() - 1);
+        }
     }
 
     public static BigDecimal getPriceForStockAmount(String symbol, Double quantity) {
