@@ -1,7 +1,7 @@
 <div th:fragment="stock(logo, symbol, currPrice)">
-    <a th:href="@{/stocks/{symbol}(symbol=${symbol})}">
-        <img th:src="${logo}">
-        <p th:text="${symbol}"></p>
-        <p th:text="${currPrice}"></p>
-    </a>
+	<a th:href="@{/stocks/{symbol}(symbol=${symbol})}">
+		<img th:src="${logo}">
+		<p th:text="${symbol}"></p>
+		<p th:text="${currPrice}"></p>
+	</a>
 </div>

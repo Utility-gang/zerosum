@@ -1,72 +1,68 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-<nav th:fragment="navbar" class="bg-gray-900 shadow-xl">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-            <!-- Logo/Brand -->
-            <div class="flex-shrink-0">
-                <a href="/" class="text-2xl font-bold text-white hover:text-green-400 transition-colors duration-200">
-                    ZeroSum
-                </a>
-            </div>
+	<head>
+		<meta charset="UTF-8">
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+	<body>
+		<nav th:fragment="navbar" class="bg-gray-900 shadow-xl">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between items-center h-16">
+					<!-- Logo/Brand -->
+					<div class="flex-shrink-0">
+						<a href="/" class="text-2xl font-bold text-white hover:text-green-400 transition-colors duration-200">
+							ZeroSum
+						</a>
+					</div>
 
-            <!-- Navigation Links -->
-            <div class="hidden md:flex space-x-6">
-                <a href="/" class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
-                    Home
-                </a>
-                <a href="/portfolio" class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
-                    Portfolio
-                </a>
-            </div>
+					<!-- Navigation Links -->
+					<div class="hidden md:flex space-x-6">
+						<a href="/" class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+							Home
+						</a>
+						<a href="/portfolio" class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+							Portfolio
+						</a>
+					</div>
 
-            <!-- Portfolio Value Badge -->
-            <div th:if="${totalPortfolioValue != null}"
-                 class="hidden md:flex items-center gap-3 bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 text-white px-5 py-2.5 rounded-xl shadow-lg hover:shadow-2xl transform hover: scale-105 transition-all duration-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div class="flex flex-col">
-                    <span class="text-xs font-medium opacity-90">Total Value</span>
-                    <span th:text="${totalPortfolioValue}" class="text-lg font-bold">$0.00</span>
-                </div>
-            </div>
+					<!-- Portfolio Value Badge -->
+					<div th:if="${totalPortfolioValue != null}" class="hidden md:flex items-center gap-3 bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 text-white px-5 py-2.5 rounded-xl shadow-lg hover:shadow-2xl transform hover: scale-105 transition-all duration-200">
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+						<div class="flex flex-col">
+							<span class="text-xs font-medium opacity-90">Total Value</span>
+							<span th:text="${totalPortfolioValue}" class="text-lg font-bold">$0.00</span>
+						</div>
+					</div>
 
-            <!-- Mobile menu button -->
-            <div class="md:hidden">
-                <button type="button"
-                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover: bg-gray-800 focus: outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
-                        onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
+					<!-- Mobile menu button -->
+					<div class="md:hidden">
+						<button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover: bg-gray-800 focus: outline-none focus:ring-2 focus:ring-inset focus:ring-green-500" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+							<svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
 
-    <!-- Mobile menu -->
-    <div class="md:hidden hidden" id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-2 bg-gray-800">
-            <a href="/" class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
-                Home
-            </a>
-            <a href="/portfolio" class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
-                Portfolio
-            </a>
-            <!-- Portfolio value for mobile -->
-            <div th:if="${totalPortfolioValue != null}"
-                 class="mt-3 mx-3 p-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-lg">
-                <div class="text-xs font-semibold opacity-90">Total Portfolio Value</div>
-                <div th:text="${totalPortfolioValue}" class="text-2xl font-bold mt-1">$0.00</div>
-            </div>
-        </div>
-    </div>
-</nav>
-</body>
+			<!-- Mobile menu -->
+			<div class="md:hidden hidden" id="mobile-menu">
+				<div class="px-2 pt-2 pb-3 space-y-2 bg-gray-800">
+					<a href="/" class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
+						Home
+					</a>
+					<a href="/portfolio" class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
+						Portfolio
+					</a>
+					<!-- Portfolio value for mobile -->
+					<div th:if="${totalPortfolioValue != null}" class="mt-3 mx-3 p-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-lg">
+						<div class="text-xs font-semibold opacity-90">Total Portfolio Value</div>
+						<div th:text="${totalPortfolioValue}" class="text-2xl font-bold mt-1">$0.00</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+	</body>
 </html>
