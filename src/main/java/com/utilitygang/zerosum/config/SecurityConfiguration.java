@@ -8,13 +8,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.utilitygang.zerosum.model.User;
 import com.utilitygang.zerosum.repository.UserRepository;
-
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity

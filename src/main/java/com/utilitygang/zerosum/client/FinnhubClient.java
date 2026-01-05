@@ -18,11 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class FinnhubClient extends WebSocketClient {
 
-    private final CompanyRepository companyRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
 
-    public FinnhubClient(URI serverUri, CompanyRepository companyRepository) {
+    public FinnhubClient(URI serverUri) {
         super(serverUri);
-        this.companyRepository = companyRepository;
     }
 
     @Override
