@@ -39,13 +39,15 @@
     <div th:each="company : ${companies}"
          class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden m-2 sm:m-0 max-w-sm mx-auto">
 
-    <!-- Stock Card Content -->
+        <!-- Stock Card Content -->
         <div class="p-4 sm:p-6">
-        <!-- Stock Fragment -->
-                <div th:replace="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})}"></div>
+            <!-- Stock Fragment -->
+            <div th:replace="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})}"></div>
 
-                <!-- Buy Button -->
+            <!-- Buy Button -->
             <div th:replace="~{fragments/buyButton.html :: buyButton(${company.symbol})}"></div>
+            <!-- Sell Button -->
+            <div th:replace="~{fragments/sell-button.html :: sell-button}"></div>
             </div>
         </div>
     </div>

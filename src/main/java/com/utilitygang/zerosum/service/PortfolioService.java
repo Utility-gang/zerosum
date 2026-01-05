@@ -1,11 +1,13 @@
 package com.utilitygang.zerosum.service;
 
 import com.utilitygang.zerosum.data.PriceData;
-import com.utilitygang.zerosum.model. Stock;
-import com.utilitygang.zerosum.model. User;
-import com.utilitygang.zerosum.repository. StockRepository;
-import org. springframework.beans.factory.annotation. Autowired;
-import org. springframework.stereotype.Service;
+import com.utilitygang.zerosum.model.Stock;
+import com.utilitygang.zerosum.model.User;
+import com.utilitygang.zerosum.repository.StockRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import static com.utilitygang.zerosum.data.PriceData.getPriceForStockAmount;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,40 +19,20 @@ public class PortfolioService {
     private StockRepository stockRepository;
 
     /**
+     * Calculates just the total value of stocks (excluding cash)
+     */
+    public BigDecimal calculateTotalStockValue(User user) {
+        return stockRepository.findByOwner(user).stream()
+                .map(stock -> getPriceForStockAmount(stock.getCompany().getSymbol(), stock.getAmount()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
      * Calculates the total portfolio value for a user
      * Total = Cash + Sum of (stock quantity * current price)
      */
     public BigDecimal calculateTotalPortfolioValue(User user) {
-        List<Stock> userStocks = stockRepository.findByOwner(user);
-
-        BigDecimal totalStockValue = BigDecimal. ZERO;
-
-        for (Stock stock : userStocks) {
-            BigDecimal stockPrice = PriceData.getPrice(stock.getCompany().getSymbol());
-            BigDecimal stockAmount = BigDecimal.valueOf(stock.getAmount());
-            BigDecimal stockValue = stockPrice.multiply(stockAmount);
-            totalStockValue = totalStockValue.add(stockValue);
-        }
-
         // Total portfolio = cash + stock values
-        return user.getCash().add(totalStockValue);
-    }
-
-    /**
-     * Calculates just the total value of stocks (excluding cash)
-     */
-    public BigDecimal calculateTotalStockValue(User user) {
-        List<Stock> userStocks = stockRepository.findByOwner(user);
-
-        BigDecimal totalStockValue = BigDecimal.ZERO;
-
-        for (Stock stock : userStocks) {
-            BigDecimal stockPrice = PriceData. getPrice(stock.getCompany().getSymbol());
-            BigDecimal stockAmount = BigDecimal.valueOf(stock.getAmount());
-            BigDecimal stockValue = stockPrice.multiply(stockAmount);
-            totalStockValue = totalStockValue.add(stockValue);
-        }
-
-        return totalStockValue;
+        return user.getCash().add(calculateTotalStockValue(user));
     }
 }
