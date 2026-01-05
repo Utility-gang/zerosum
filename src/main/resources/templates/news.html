@@ -29,24 +29,48 @@
         </div>
 
         <!-- page controller -->
-        <div class="pagination">
+        <div class="flex items-center justify-center gap-6 mt-10 text-lg font-medium">
 
-            <a th:if="${currentPage > 0}"
-               th:href="@{/news(page=${currentPage - 1})}">
-                ← Previous
+            <!-- previous -->
+            <a
+                    th:if="${currentPage > 0}"
+                    th:href="@{/news(page=${currentPage - 1})}"
+                    class="flex items-center gap-2 px-5 py-3 rounded-lg border border-gray-300
+               text-gray-700 hover:bg-gray-100 hover:text-black
+               transition-colors duration-150"
+            >
+                <span class="text-2xl">←</span>
             </a>
 
-            <span>
-                Page <span th:text="${currentPage + 1}"></span>
-                of <span th:text="${totalPages}"></span>
+            <!-- redner a blank button on the first page, else it looks weird -->
+            <p
+                    th:if="${currentPage == 0}"
+                    class="flex items-center gap-2 px-5 py-3 rounded-lg border border-gray-300
+               text-gray-700 hover:bg-gray-100 hover:text-black
+               transition-colors duration-150"
+            >
+                <span class="text-2xl">-</span>
+            </p>
+
+            <!-- page indicator -->
+            <span class="text-gray-600">
+                Page <span class="font-semibold" th:text="${currentPage + 1}"></span>
+                of <span class="font-semibold" th:text="${totalPages}"></span>
             </span>
 
-            <a th:if="${currentPage + 1 < totalPages}"
-               th:href="@{/news(page=${currentPage + 1})}">
-                Next →
+            <!-- next -->
+            <a
+                    th:if="${currentPage + 1 < totalPages}"
+                    th:href="@{/news(page=${currentPage + 1})}"
+                    class="flex items-center gap-2 px-5 py-3 rounded-lg border border-gray-300
+               text-gray-700 hover:bg-gray-100 hover:text-black
+               transition-colors duration-150"
+            >
+                <span class="text-2xl">→</span>
             </a>
 
         </div>
+
 
     </div>
 </body>
