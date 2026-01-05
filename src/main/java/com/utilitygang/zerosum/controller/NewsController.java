@@ -4,6 +4,7 @@ import com.utilitygang.zerosum.model.NewsArticle;
 import com.utilitygang.zerosum.model.User;
 import com.utilitygang.zerosum.repository.UserRepository;
 import com.utilitygang.zerosum.service.FinnhubService;
+import com.utilitygang.zerosum.service.NewsService;
 import com.utilitygang.zerosum.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +21,7 @@ import java.util.Locale;
 @Controller
 public class NewsController {
     @Autowired
-    FinnhubService finnhubService;
+    NewsService newsService;
 
     @Autowired
     UserRepository userRepository;
@@ -30,7 +31,7 @@ public class NewsController {
 
     @GetMapping({ "/news" })
     public String news(Model model, @AuthenticationPrincipal DefaultOidcUser principal) throws Exception {
-        List<NewsArticle> newsArticles = finnhubService.fetchNews();
+        List<NewsArticle> newsArticles = newsService.getFinancialNews();
         model.addAttribute("newsArticles", newsArticles);
 
         // DEBUG: Log authentication status

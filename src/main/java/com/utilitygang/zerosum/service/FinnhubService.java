@@ -2,7 +2,6 @@ package com.utilitygang.zerosum.service;
 
 import com.utilitygang.zerosum.client.FinnhubClient;
 import com.utilitygang.zerosum.model.Company;
-import com.utilitygang.zerosum.model.NewsArticle;
 import com.utilitygang.zerosum.repository.CompanyRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
@@ -56,23 +55,5 @@ public class FinnhubService {
                 companyRepository.save(company);
             }
         }
-    }
-
-    public List<NewsArticle> fetchNews() throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-
-        String url = String.format("https://finnhub.io/api/v1/news?category=general&token=%s", finnhubKey);
-
-        // fetch the news articles from the endpoint and deserialize them into a list of NewsArticle objects
-        ResponseEntity<List<NewsArticle>> response =
-                restTemplate.exchange(
-                        url,
-                        HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<>() {
-                        }
-                );
-
-        return response.getBody();
     }
 }
