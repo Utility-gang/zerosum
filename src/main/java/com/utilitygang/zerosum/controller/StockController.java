@@ -46,6 +46,7 @@ public class StockController {
                 stock = stockRepo.findByOwnerAndCompanySymbol(owner, company_id).get();
                 stock.setAmount(stock.getAmount() + amount);
                 owner.setCash(owner.getCash().subtract(stock_value));
+                userRepo.save(owner);
             }
             stockRepo.save(stock);
         }

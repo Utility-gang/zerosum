@@ -63,9 +63,7 @@
                 </form>
 
             <!-- Sell Button -->
-            <th:block th:if="${holdings.getOrDefault(company.symbol, 0.0)} > 0">
-                <div th:replace="~{fragments/sell-button.html :: sell-button}"></div>
-            </th:block>
+            <div th:replace="~{fragments/sell-button.html :: sell-button}"></div>
 
             </div>
         </div>
