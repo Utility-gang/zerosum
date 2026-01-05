@@ -7,12 +7,14 @@ import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Map;
 
 @Service
+@Profile("!test")
 public class FinnhubService {
 
     private final CompanyRepository companyRepository;
