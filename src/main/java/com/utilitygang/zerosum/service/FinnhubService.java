@@ -2,9 +2,13 @@ package com.utilitygang.zerosum.service;
 
 import com.utilitygang.zerosum.client.FinnhubClient;
 import com.utilitygang.zerosum.model.Company;
+import com.utilitygang.zerosum.model.NewsArticle;
 import com.utilitygang.zerosum.repository.CompanyRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -54,14 +58,20 @@ public class FinnhubService {
         }
     }
 
-    public List<Map<String, Object>> fetchNews() throws Exception {
+    public List<NewsArticle> fetchNews() throws Exception {
         RestTemplate restTemplate = new RestTemplate();
 
         String url = String.format("https://finnhub.io/api/v1/news?category=general&token=%s", finnhubKey);
 
-        // fetch the news articles from the endpoint and deserialize them into a list of objects
-        Map<String, Object>[] response = restTemplate.getForObject(url, Map[].class);
+        // fetch the news articles from the endpoint and deserialize them into a list of NewsArticle objects
+        ResponseEntity<List<NewsArticle>> response =
+                restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<NewsArticle>>() {}
+                );
 
-        return Arrays.asList(response);
+        return response.getBody();
     }
 }
