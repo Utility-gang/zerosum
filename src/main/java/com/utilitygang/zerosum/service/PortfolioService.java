@@ -16,7 +16,7 @@ import java.util.List;
 public class PortfolioService {
 
     @Autowired
-    private StockRepository stockRepository;
+    StockRepository stockRepository;
 
     /**
      * Calculates just the total value of stocks (excluding cash)

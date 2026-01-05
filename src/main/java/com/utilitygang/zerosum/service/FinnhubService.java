@@ -6,6 +6,7 @@ import com.utilitygang.zerosum.model.Company;
 import com.utilitygang.zerosum.repository.CompanyRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,16 @@ import java.util.Map;
 @Service
 public class FinnhubService {
     @Autowired
-    private CompanyRepository companyRepository;
+    CompanyRepository companyRepository;
     private final String finnhubKey;
 
     public FinnhubService() {
         this.finnhubKey = Dotenv.load().get("FINNHUB_API_KEY");
+    }
+
+    @PreDestroy
+    public void saveCachedPrices() {
+        PriceData.serialise();
     }
 
     // when the app starts up, open the websocketConnection
@@ -31,7 +37,7 @@ public class FinnhubService {
     public void openWebsocketConnection() throws Exception {
         String url = String.format("wss://ws.finnhub.io?token=%s", finnhubKey);
         URI uri = new URI(url);
-        FinnhubClient client = new FinnhubClient(uri);
+        FinnhubClient client = new FinnhubClient(uri, companyRepository);
         client.connect();
     }
 
