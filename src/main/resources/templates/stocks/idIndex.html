@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZeroSum - Home</title>
+    <title th:if="${company}" th:text="|ZeroSum - ${company.symbol} Profile|"></title>
+    <title th:unless="${company}" th:text="|ZeroSum - Company Profile|"></title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -13,9 +14,13 @@
 <!-- Main Content -->
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg: px-8 py-8">
     <!-- Hero Section -->
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">Available Stocks</h1>
-        <p class="text-gray-600">Browse and trade stocks in real-time</p>
+    <div th:if="${company}" class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2" th:text="|${company.symbol} Profile|"></h1>
+        <p class="text-gray-600" th:text="|View the performance of ${company.symbol}|"></p>
+    </div>
+    <div th:unless="${company}" class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2" th:text="|Stock Profile|"></h1>
+        <p class="text-gray-600" th:text="|View the performance of a specific Stock|"></p>
     </div>
 
     <!-- Flash Message -->
@@ -32,26 +37,18 @@
         </div>
     </div>
 
-    <!-- Stocks Grid -->
-    <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-sm mx-auto md:max-w-none">
-
-
-    <div th:each="company : ${companies}"
-         class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden m-2 sm:m-0 max-w-sm mx-auto">
-
-    <!-- Stock Card Content -->
+    <div th:if="${company}" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden m-2 sm:m-0 max-w-sm mx-auto">
         <div class="p-4 sm:p-6">
         <!-- Stock Fragment -->
-                <div th:replace="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})}"></div>
+            <div th:replace="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})}"></div>
 
-                <!-- Buy Button -->
+            <!-- Buy Button -->
             <div th:replace="~{fragments/buyButton.html :: buyButton(${company.symbol})}"></div>
-            </div>
         </div>
     </div>
 
     <!-- Empty State -->
-    <div th:if="${#lists.isEmpty(companies)}"
+    <div th:unless="${company}"
          class="text-center py-12">
         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-. 707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>

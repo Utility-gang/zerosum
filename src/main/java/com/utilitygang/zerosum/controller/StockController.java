@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,18 @@ public class StockController {
     StockRepository stockRepo;
     @Autowired
     CompanyRepository companyRepo;
+
+    @GetMapping("/stocks/{company_id}")
+    public String stocksIdPage(@PathVariable String company_id, RedirectAttributes attr,
+            @AuthenticationPrincipal DefaultOidcUser principal, Model model) {
+        Company company = companyRepo.findById(company_id).orElse(null);
+        if (company == null) {
+            attr.addFlashAttribute("msg", "This stock doesn't exist/isn't currently tradeable on ZeroSum.");
+            return "redirect:/stocks";
+        }
+        model.addAttribute("company", company);
+        return "stocks/idIndex";
+    }
 
     @PostMapping("/stocks/{company_id}/buy")
     public String stocksBuy(@PathVariable String company_id, @RequestParam(required = true) Double amount,
