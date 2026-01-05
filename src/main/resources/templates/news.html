@@ -10,4 +10,10 @@
     <!-- Include navbar -->
     <div th:replace="~{fragments/navbar.html :: navbar}"></div>
     <p>News</p>
+    <ul th:each="newsArticle : ${newsArticles}">
+       <li>
+           <img th:src="${newsArticle.imageUrl}">
+           <p th:text="${newsArticle.headline}"></p>
+       </li>
+    </ul>
 </body>

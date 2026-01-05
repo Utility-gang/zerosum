@@ -19,8 +19,9 @@ public class NewsController {
 
     @GetMapping({ "/news" })
     public String news(Model model) throws Exception {
-        List<NewsArticle> news = finnhubService.fetchNews();
-        model.addAttribute(news);
+        List<NewsArticle> newsArticles = finnhubService.fetchNews();
+        System.out.println(newsArticles);
+        model.addAttribute("newsArticles", newsArticles);
         return "news";
     }
 }

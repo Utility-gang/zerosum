@@ -69,7 +69,8 @@ public class FinnhubService {
                         url,
                         HttpMethod.GET,
                         null,
-                        new ParameterizedTypeReference<List<NewsArticle>>() {}
+                        new ParameterizedTypeReference<>() {
+                        }
                 );
 
         return response.getBody();
