@@ -49,6 +49,6 @@ jobs:
           github_token: ${{ secrets.PROJECT_TOKEN }}
           organization: Utility-gang
           project_number: 3
-          content_id: ${{ github.event.issue.node_id }}
+          content_id: ${{ github.event.pull_request.node_id || github.event.issue.node_id }}
           field: Status
           value: ${{ steps.map.outputs.status }}
