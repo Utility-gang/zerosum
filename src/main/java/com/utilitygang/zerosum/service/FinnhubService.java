@@ -10,6 +10,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -49,5 +52,16 @@ public class FinnhubService {
                 companyRepository.save(company);
             }
         }
+    }
+
+    public List<Map<String, Object>> fetchNews() throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = String.format("https://finnhub.io/api/v1/news?category=general&token=%s", finnhubKey);
+
+        // fetch the news articles from the endpoint and deserialize them into a list of objects
+        Map<String, Object>[] response = restTemplate.getForObject(url, Map[].class);
+
+        return Arrays.asList(response);
     }
 }
