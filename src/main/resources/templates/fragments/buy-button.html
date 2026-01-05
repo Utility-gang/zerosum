@@ -12,7 +12,7 @@
                value="0"
                required
                name="amount"
-               th:id="|amount-selector-${company.symbol}|"
+               th:id="|buy-selector-${company.symbol}|"
                orient="horizontal"
                list="spend-limits"
                class="w-full py-2 rounded-md accent-green-600">
@@ -20,16 +20,16 @@
             <option value="0" th:label="${zeroMoney}"></option>
             <option th:value="${user.cash}" th:label="${user.cash}"></option>
         </datalist>
-        <p th:id="|amount-display-${company.symbol}|"
+        <p th:id="|buy-display-${company.symbol}|"
            th:text="${zeroMoney}"></p>
         <script th:inline="javascript">
-            document.getElementById("amount-selector-" + [[${company.symbol}]])
+            document.getElementById("buy-selector-" + [[${company.symbol}]])
                 .addEventListener("change", (e) => {
                     const formatter = new Intl.NumberFormat(
                         "en-US",
                         { style: "currency", currency: "USD", }
                     );
-                    document.getElementById("amount-display-" + [[${company.symbol}]])
+                    document.getElementById("buy-display-" + [[${company.symbol}]])
                         .innerText = formatter.format(e.currentTarget.value);
                 });
         </script>

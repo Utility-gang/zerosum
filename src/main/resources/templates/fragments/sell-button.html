@@ -1,14 +1,34 @@
 <form th:fragment="sell-button" th:action="@{/stocks/{symbol}/sell(symbol=${company.symbol})}" method="post" class="mt-4 space-y-3">
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-        <input type="number"
+        <input type="range"
+               min="0"
+               th:max="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}"
                name="amount"
-               min="1"
-               step="1"
+               step="0.25"
                placeholder="1"
-               th:max="${holdings.getOrDefault(company.symbol, 0.0)}"
                required
-               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-sm">
+               th:id="|sell-selector-${company.symbol}|"
+               orient="horizontal"
+               list="sell-limits"
+               class="w-full py-2 rounded-md accent-green-600">
+        <datalist id="sell-limits" class="flex flex-row justify-between">
+            <option value="0" th:label="${zeroMoney}"></option>
+            <option th:value="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}" th:label="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}"></option>
+        </datalist>
+        <p th:id="|sell-display-${company.symbol}|"
+           th:text="${zeroMoney}"></p>
+        <script th:inline="javascript">
+            document.getElementById("sell-selector-" + [[${company.symbol}]])
+                .addEventListener("change", (e) => {
+                    const formatter = new Intl.NumberFormat(
+                        "en-US",
+                        { style: "currency", currency: "USD", }
+                    );
+                    document.getElementById("sell-display-" + [[${company.symbol}]])
+                        .innerText = formatter.format(e.currentTarget.value);
+                });
+        </script>
     </div>
     <button type="submit"
             class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 shadow-sm hover:shadow-md">
