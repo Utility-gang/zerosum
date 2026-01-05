@@ -12,7 +12,7 @@ public class NewsArticle {
     private String headline;
     private String category;
     private Integer datetime;
-    @JsonProperty("image_url")
+    @JsonProperty("image")
     private String imageUrl;
     private String source;
     private String summary;
