@@ -2,6 +2,6 @@
 	<a th:href="@{/stocks/{symbol}(symbol=${symbol})}">
 		<img th:src="${logo}">
 		<p th:text="${symbol}"></p>
-		<p th:text="${currPrice}"></p>
+		<p th:text="${#numbers.formatCurrency(currPrice)}"></p>
 	</a>
 </div>

@@ -1,0 +1,54 @@
+name: Sync Project Status from Labels
+
+on:
+  issues:
+    types: [labeled]
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Map label to status
+        id: map
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const label = context.payload.label.name
+            const map = {
+              "in-progress": "In progress",
+              "blocked": "Blocked",
+              "review": "In review",
+              "changes-requested": "Code changes requested",
+              "done": "Done",
+            }
+            const status = map[label]
+            if (!status) {
+              core.info(`No mapping for label "${label}" - skipping`)
+              core.setOutput("skip", "true")
+            } else {
+              core.setOutput("status", status)
+              core.setOutput("skip", "false")
+            }
+
+      - name: Add item to Utility-gang Project 3
+        if: steps.map.outputs.skip != 'true'
+        uses: actions/add-to-project@v1.0.2
+        with:
+          project-url: https://github.com/orgs/Utility-gang/projects/3
+          github-token: ${{ secrets.PROJECT_TOKEN }}
+
+      - name: Update Status field from label
+        if: steps.map.outputs.skip != 'true'
+        uses: github/update-project-action@v3
+        with:
+          github_token: ${{ secrets.PROJECT_TOKEN }}
+          organization: Utility-gang
+          project_number: 3
+          content_id: ${{ github.event.pull_request.node_id || github.event.issue.node_id }}
+          field: Status
+          value: ${{ steps.map.outputs.status }}
