@@ -1,5 +1,4 @@
-<div th:fragment="buyButton(symbol)">
-<form th:action="@{/stocks/{symbol}/buy(symbol=${company.symbol})}" method="post" class="mt-4 space-y-3">
+<form th:fragment="buyButton(symbol)" th:action="@{/stocks/{symbol}/buy(symbol=${company.symbol})}" method="post" class="mt-4 space-y-3">
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
         <input type="number" name="amount" min="1" step="1" placeholder="1" required
@@ -10,4 +9,3 @@
         Buy Stock
     </button>
 </form>
-</div>

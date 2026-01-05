@@ -18,5 +18,7 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
     Optional<Stock> findByOwnerAndCompanySymbol(User owner, String symbol);
 
+    Optional<Stock> findByOwnerAndCompany(User owner, Company company);
+
     boolean existsByOwnerIdAndCompanySymbol(Long ownerId, String symbol);
 }

@@ -66,15 +66,16 @@ public class IndexController {
                 holdings = userStocks.stream().collect(Collectors.toMap(
                         stock -> stock.getCompany().getSymbol(),
                         Stock::getAmount,
-                        (existing, replacement) -> existing
-                ));
+                        (existing, replacement) -> existing));
 
                 // add all the companies that the user has bought
                 if (!isRoot) {
                     model.addAttribute("companies", companyRepository.findAllByStockOwner(user));
 
-//                    model.addAttribute("ownedStocks", stockRepository.findByOwnerId(user.getId()));
-//                    model.addAttribute("ownedStocks", stockRepository.findByOwnerId(user.getId()).get(0).getAmount());
+                    // model.addAttribute("ownedStocks",
+                    // stockRepository.findByOwnerId(user.getId()));
+                    // model.addAttribute("ownedStocks",
+                    // stockRepository.findByOwnerId(user.getId()).get(0).getAmount());
                 }
 
                 BigDecimal totalPortfolioValue = portfolioService.calculateTotalPortfolioValue(user);

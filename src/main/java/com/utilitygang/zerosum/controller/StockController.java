@@ -31,12 +31,15 @@ public class StockController {
     @GetMapping("/stocks/{company_id}")
     public String stocksIdPage(@PathVariable String company_id, RedirectAttributes attr,
             @AuthenticationPrincipal DefaultOidcUser principal, Model model) {
+        User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
         Company company = companyRepo.findById(company_id).orElse(null);
         if (company == null) {
             attr.addFlashAttribute("msg", "This stock doesn't exist/isn't currently tradeable on ZeroSum.");
             return "redirect:/stocks";
         }
+        Stock stock = stockRepo.findByOwnerAndCompany(owner, company).orElse(new Stock(0.0, null, company));
         model.addAttribute("company", company);
+        model.addAttribute("maxValue", stock.getAmount());
         return "stocks/idIndex";
     }
 
