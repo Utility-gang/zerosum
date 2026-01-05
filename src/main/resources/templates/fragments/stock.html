@@ -1,5 +1,5 @@
 <div th:fragment="stock(logo, symbol, currPrice)">
     <img th:src="${logo}">
     <p th:text="${symbol}"></p>
-    <p th:text="${currPrice}"></p>
+    <p th:text="${#numbers.formatCurrency(currPrice)}"></p>
 </div>

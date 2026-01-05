@@ -4,17 +4,14 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.utilitygang.zerosum.data.PriceData;
 import com.utilitygang.zerosum.model.Company;
 import com.utilitygang.zerosum.repository.CompanyRepository;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class FinnhubClient extends WebSocketClient {
 
