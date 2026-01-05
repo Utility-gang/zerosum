@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 public class NewsService {
-    private static final int REFRESH_RATE = 10 * 60 * 500;
+    private static final long REFRESH_RATE = 10 * 60 * 500;
     private static final String CACHE_FILE = "news.json";
 
     private final String finnhubKey;
@@ -25,9 +25,9 @@ public class NewsService {
 
     private List<NewsArticle> cachedNews;
 
-    public NewsService(RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public NewsService(ObjectMapper objectMapper) {
         this.finnhubKey = Dotenv.load().get("FINNHUB_API_KEY");
-        this.restTemplate = restTemplate;
+        this.restTemplate = new RestTemplate();
         this.objectMapper = objectMapper;
     }
 
@@ -38,6 +38,7 @@ public class NewsService {
         // try to find the file and if it doesn't exist then manually refresh the cache
         File file = new File(CACHE_FILE);
         if (!file.exists()) {
+            // might be dangerous? but didnt want to just return an empty list
             refreshNews();
             return;
         }
