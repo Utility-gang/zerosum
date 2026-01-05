@@ -37,7 +37,7 @@ jobs:
 
       - name: Add item to Utility-gang Project 3
         if: steps.map.outputs.skip != 'true'
-        uses: actions/add-to-project@v1
+        uses: actions/add-to-project@v1.0.2
         with:
           project-url: https://github.com/orgs/Utility-gang/projects/3
           github-token: ${{ secrets.PROJECT_TOKEN }}
