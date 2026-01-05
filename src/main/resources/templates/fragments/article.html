@@ -1,7 +1,9 @@
-<div th:fragment="article(imageUrl, headline, source, summary, url)">
+<div th:fragment="article(imageUrl, headline, source, summary, url)"
+     class="flex flex-col gap-1.5">
     <img th:src="${imageUrl}">
-    <p th:text="${headline}"></p>
-    <p>Source: <span th:text="${source}"></span></p>
+    <p>
+        <span class="font-semibold" th:text="${headline}"></span> - <span class="italic" th:text="${source}"></span>
+    </p>
     <p th:text="${summary}"></p>
     <a th:href="${url}"
        class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 shadow-sm hover:shadow-md">
