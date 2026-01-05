@@ -1,5 +1,9 @@
 package com.utilitygang.zerosum.model;
 
+import java.math.BigDecimal;
+
+import com.utilitygang.zerosum.data.PriceData;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,5 +32,10 @@ public class Stock {
     }
 
     public Stock() {
+    }
+
+    public BigDecimal getValue() {
+        return PriceData.getPrice(this.company.getSymbol())
+            .multiply(new BigDecimal(this.amount));
     }
 }

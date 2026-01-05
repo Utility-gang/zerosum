@@ -43,7 +43,8 @@ public class IndexController {
     public String indexAndPortfolio(Model model, @AuthenticationPrincipal DefaultOidcUser principal,
             HttpServletRequest req) {
 
-        Map<String, Double> holdings = new java.util.HashMap<>();
+        Map<String, Double> holdingsAmounts = new java.util.HashMap<>();
+        Map<String, BigDecimal> holdingsValues = new java.util.HashMap<>();
 
         // use this to do the couple of changes in logic
         boolean isRoot = req.getRequestURI().equals("/");
@@ -63,9 +64,15 @@ public class IndexController {
 
             if (user != null) {
                 List<Stock> userStocks = stockRepository.findByOwnerId(user.getId());
-                holdings = userStocks.stream().collect(Collectors.toMap(
+                holdingsAmounts = userStocks.stream().collect(Collectors.toMap(
                         stock -> stock.getCompany().getSymbol(),
                         Stock::getAmount,
+                        (existing, replacement) -> existing
+                ));
+
+                holdingsValues = userStocks.stream().collect(Collectors.toMap(
+                        stock -> stock.getCompany().getSymbol(),
+                        Stock::getValue,
                         (existing, replacement) -> existing
                 ));
 
@@ -87,6 +94,7 @@ public class IndexController {
                 model.addAttribute("totalPortfolioValue", currencyFormatter.format(totalPortfolioValue));
                 model.addAttribute("totalPortfolioValueNum", totalPortfolioValue);
                 model.addAttribute("user", user);
+                model.addAttribute("userCash", currencyFormatter.format(user.getCash()));
             } else {
                 System.out.println("⚠️ DEBUG: User not found in database for email: " + email);
             }
@@ -94,7 +102,7 @@ public class IndexController {
             System.out.println("⚠️ DEBUG: Principal is null - user not authenticated");
         }
 
-        model.addAttribute("holdings", holdings);
+        model.addAttribute("holdingsAmounts", holdingsAmounts);
 
         return "index";
     }
