@@ -36,3 +36,4 @@ build/
 **/.DS_store
 .env
 nohup.out
+**/prices.json
