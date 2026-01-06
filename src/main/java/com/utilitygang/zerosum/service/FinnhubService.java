@@ -41,21 +41,21 @@ public class FinnhubService {
     }
 
 
-    // when the app starts up, send GET requests to the quote endpoint
-    // and update the cached price
-    @PostConstruct
-    public void updateCachedPrices() throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-
-        for (Company company : companyRepository.findAll()) {
-            String url = String.format("https://finnhub.io/api/v1/quote?symbol=%s&token=%s", company.getSymbol(), finnhubKey);
-
-            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-            if (response != null && response.containsKey("c")) {
-                Double currentPrice = Double.valueOf(response.get("c").toString());
-                company.setCachedPrice(BigDecimal.valueOf(currentPrice));
-                companyRepository.save(company);
-            }
-        }
-    }
+//    // when the app starts up, send GET requests to the quote endpoint
+//    // and update the cached price
+//    @PostConstruct
+//    public void updateCachedPrices() throws Exception {
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        for (Company company : companyRepository.findAll()) {
+//            String url = String.format("https://finnhub.io/api/v1/quote?symbol=%s&token=%s", company.getSymbol(), finnhubKey);
+//
+//            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+//            if (response != null && response.containsKey("c")) {
+//                Double currentPrice = Double.valueOf(response.get("c").toString());
+//                company.setCachedPrice(BigDecimal.valueOf(currentPrice));
+//                companyRepository.save(company);
+//            }
+//        }
+//    }
 }
