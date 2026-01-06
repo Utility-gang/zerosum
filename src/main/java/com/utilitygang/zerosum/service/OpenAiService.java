@@ -36,23 +36,15 @@ public class OpenAiService {
         try {
             Response response = openai.responses().create(params);
 
-            // Extract from the SDK object (not from response.toString())
+
             String text = OpenAiResponse.extractOutputText(response);
 
-            // TEMP DEBUG (remove later if you want)
-            System.out.println("=== OpenAI raw Response ===");
-            System.out.println(response);
-            System.out.println("=== Extracted OpenAI text ===");
-            System.out.println(text);
-            System.out.println("===========================");
 
             return (text == null || text.isBlank())
                     ? fallback()
                     : text;
 
         } catch (Exception e) {
-            // TEMP DEBUG (remove later if you want)
-            e.printStackTrace();
             return fallback();
         }
     }
