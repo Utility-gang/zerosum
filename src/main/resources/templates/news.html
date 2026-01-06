@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroSum - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Include navbar -->
+    <div th:replace="~{fragments/navbar.html :: navbar}"></div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg: px-8 py-8">
+        <!-- Hero Section -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Financial News</h1>
+            <p class="text-gray-600">Stay up to date with the latest business and financial news</p>
+        </div>
+
+        <!-- article grid -->
+        <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-sm mx-auto md:max-w-none">
+            <div th:each="newsArticle : ${newsArticles}"
+                class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden m-2 sm:m-0 max-w-sm mx-auto">
+                <div class="p-4 sm:p-6">
+                   <div th:replace="~{fragments/article.html :: article(${newsArticle.imageUrl}, ${newsArticle.headline}, ${newsArticle.source}, ${newsArticle.summary}, ${newsArticle.url})}"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- page controller -->
+        <div class="flex items-center justify-center gap-6 mt-10 text-lg font-medium">
+
+            <!-- previous -->
+            <a
+                    th:if="${currentPage > 0}"
+                    th:href="@{/news(page=${currentPage - 1})}"
+                    class="flex items-center gap-2 px-5 py-3 rounded-lg border border-gray-300
+               text-gray-700 hover:bg-gray-100 hover:text-black
+               transition-colors duration-150"
+            >
+                <span class="text-2xl">←</span>
+            </a>
+
+            <!-- redner a blank button on the first page, else it looks weird -->
+            <p
+                    th:if="${currentPage == 0}"
+                    class="flex items-center gap-2 px-5 py-3 rounded-lg border border-gray-300
+               text-gray-700 hover:bg-gray-100 hover:text-black
+               transition-colors duration-150"
+            >
+                <span class="text-2xl">-</span>
+            </p>
+
+            <!-- page indicator -->
+            <span class="text-gray-600">
+                Page <span class="font-semibold" th:text="${currentPage + 1}"></span>
+                of <span class="font-semibold" th:text="${totalPages}"></span>
+            </span>
+
+            <!-- next -->
+            <a
+                    th:if="${currentPage + 1 < totalPages}"
+                    th:href="@{/news(page=${currentPage + 1})}"
+                    class="flex items-center gap-2 px-5 py-3 rounded-lg border border-gray-300
+               text-gray-700 hover:bg-gray-100 hover:text-black
+               transition-colors duration-150"
+            >
+                <span class="text-2xl">→</span>
+            </a>
+
+        </div>
+
+
+    </div>
+</body>
