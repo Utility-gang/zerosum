@@ -6,6 +6,7 @@ import com.utilitygang.zerosum.repository.UserRepository;
 import com.utilitygang.zerosum.service.FinnhubService;
 import com.utilitygang.zerosum.service.NewsService;
 import com.utilitygang.zerosum.service.PortfolioService;
+import com.utilitygang.zerosum.service.UserContextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -25,10 +26,7 @@ public class NewsController {
     NewsService newsService;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PortfolioService portfolioService;
+    UserContextService userContextService;
 
     @GetMapping({ "/news" })
     public String news(@RequestParam(defaultValue = "0") int page, Model model, @AuthenticationPrincipal DefaultOidcUser principal) throws Exception {
@@ -64,36 +62,16 @@ public class NewsController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
-        // moved the user data code to a helper
-        addUserData(model, principal);
-
-        return "news";
-    }
-
-    private void addUserData(Model model, DefaultOidcUser principal) {
-        // DEBUG: Log authentication status
-        System.out.println("🔍 DEBUG: principal is " + (principal == null ? "NULL" : "NOT NULL"));
-
         // Add portfolio value for navbar
         if (principal != null) {
-            String email = (String) principal.getAttributes().get("email");
-            System.out.println("🔍 DEBUG: Email from principal: " + email);
-
-            User user = userRepository.findUserByUsername(email).orElse(null);
-            System.out.println("🔍 DEBUG: User from database: " + (user == null ? "NULL" : user.getUsername()));
+            User user = userContextService.getUser(principal);
 
             if (user != null) {
-                BigDecimal totalPortfolioValue = portfolioService.calculateTotalPortfolioValue(user);
-                System.out.println("🔍 DEBUG: Total portfolio value: " + totalPortfolioValue);
-
-                NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-                model.addAttribute("totalPortfolioValue", currencyFormatter.format(totalPortfolioValue));
+                model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(user));
                 model.addAttribute("user", user);
-            } else {
-                System.out.println("⚠️ DEBUG: User not found in database for email: " + email);
             }
-        } else {
-            System.out.println("⚠️ DEBUG: Principal is null - user not authenticated");
         }
+
+        return "news";
     }
 }
