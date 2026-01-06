@@ -60,5 +60,6 @@ public class PortfolioService {
         for (User user : allUsers) {
             updateCachedPortfolioValue(user);
         }
+        System.out.println("updated cache value");
     }
 }
