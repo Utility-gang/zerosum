@@ -19,6 +19,9 @@ public class PortfolioService {
     // update the cached portfolio values every 5 minutes
     private static final long REFRESH_RATE = 10 * 60 * 500;
 
+    // delay the cache update by 1 min after application startup
+    private static final long INITIAL_DELAY =  10 * 60 * 100;
+
     @Autowired
     private StockRepository stockRepository;
 
@@ -51,7 +54,7 @@ public class PortfolioService {
     }
 
     // every 5 minutes, update the cached ptf values for all users
-    @Scheduled(fixedRate = REFRESH_RATE)
+    @Scheduled(fixedRate = REFRESH_RATE, initialDelay = INITIAL_DELAY)
     public void updateAllCachedPortfolioValues() {
         // get all users
         List<User> allUsers = userRepository.findAll();
