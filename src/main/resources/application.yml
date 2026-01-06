@@ -7,3 +7,7 @@ okta:
     issuer: ${OKTA_ISSUER}
     client-id: ${OKTA_CLIENT_ID}
     client-secret: ${OKTA_CLIENT_SECRET}
+
+openai:
+  api-key: ${OPENAI_API_KEY}
+  base-url: https://api.openai.com/v1

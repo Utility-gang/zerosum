@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Profile("!test")
 public class FinnhubService {
 
     private final CompanyRepository companyRepository;
