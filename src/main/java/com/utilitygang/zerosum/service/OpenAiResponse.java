@@ -13,18 +13,12 @@ public final class OpenAiResponse {
 
     /**
      * Extract assistant output text from openai-java Response.
-     *
-     * Works with your observed runtime structure:
-     * response.output() -> ResponseOutputItem -> item.message() -> message.content()
-     * -> content.isOutputText() -> content.asOutputText().text()
      */
     public static String extractOutputText(Response response) {
         if (response == null) return "";
 
-        // Some SDK versions might have outputText helper. If it exists and is non-empty, great.
-        // But in your case it returns null, so we fall back.
         try {
-            // If method exists, use it (won't crash if absent).
+        
             var m = response.getClass().getMethod("outputText");
             Object v = m.invoke(response);
             if (v != null) {
@@ -51,9 +45,6 @@ public final class OpenAiResponse {
 
                 for (ResponseOutputMessage.Content content : contentList) {
                     if (content == null) continue;
-
-                    // Your debug shows these methods exist:
-                    // isOutputText(), asOutputText(), outputText()
                     if (content.isOutputText()) {
                         ResponseOutputText ot = content.asOutputText();
                         if (ot != null && ot.text() != null && !ot.text().isBlank()) {
