@@ -16,7 +16,10 @@ public class PriceData {
     // as its thread safe when doing lots of concurrent reads/writes, imagine
     // it utilises some sort of lock
     // https://www.baeldung.com/java-concurrent-map
-    private static Map<String, List<BigDecimal>> prices = new ConcurrentHashMap<>();
+    public record Stock(Long time, BigDecimal price) {
+    }
+
+    private static Map<String, List<Stock>> prices = new ConcurrentHashMap<>();
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Path file = Paths.get("prices.json");
 
@@ -24,7 +27,7 @@ public class PriceData {
 
         try {
             // this really wants me to handle the exceptions
-            prices = mapper.readValue(file.toFile(), new TypeReference<ConcurrentHashMap<String, List<BigDecimal>>>() {
+            prices = mapper.readValue(file.toFile(), new TypeReference<ConcurrentHashMap<String, List<Stock>>>() {
             });
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -34,26 +37,31 @@ public class PriceData {
     public static void serialise() {
         try {
             // this really wants me to handle the exceptions
-            mapper.writeValue(file.toFile(), new ConcurrentHashMap<String, List<BigDecimal>>(prices));
+            mapper.writeValue(file.toFile(), new ConcurrentHashMap<String, List<Stock>>(prices));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    public static void setPrice(String symbol, BigDecimal price) {
-        prices.computeIfAbsent(symbol, k -> Collections.synchronizedList(new ArrayList<>())).add(price);
+    public static void setStock(String symbol, BigDecimal price, Long time) {
+        prices.computeIfAbsent(symbol, k -> Collections.synchronizedList(new ArrayList<>()))
+                .add(new Stock(time, price));
     }
 
     public static BigDecimal getPrice(String symbol) {
-        List<BigDecimal> list = prices.get(symbol);
+        List<Stock> list = prices.get(symbol);
         if (list == null)
             return null;
 
         synchronized (list) {
             return list.isEmpty()
                     ? null
-                    : list.get(list.size() - 1);
+                    : list.get(list.size() - 1).price();
         }
+    }
+
+    public static List<Stock> getPrices(String symbol) {
+        return prices.get(symbol);
     }
 
     public static BigDecimal getPriceForStockAmount(String symbol, Double quantity) {

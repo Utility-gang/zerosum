@@ -28,6 +28,12 @@ public class StockController {
     @Autowired
     CompanyRepository companyRepo;
 
+    @GetMapping("/stocks/{company_id}/live")
+    public String stockLiveUpdate(@PathVariable String company_id, @AuthenticationPrincipal DefaultOidcUser principal) {
+        return "hi";
+
+    }
+
     @GetMapping("/stocks/{company_id}")
     public String stocksIdPage(@PathVariable String company_id, RedirectAttributes attr,
             @AuthenticationPrincipal DefaultOidcUser principal, Model model) {

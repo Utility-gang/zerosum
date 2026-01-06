@@ -52,16 +52,17 @@ public class FinnhubClient extends WebSocketClient {
         // which contains all the trade info
         JSONArray data = root.getJSONArray("data");
 
-        // get the trade at index 0 because sometimes it sends
-        // multiple but we hope (?) that the price doesnt change
-        // in that time
-        JSONObject trade = data.getJSONObject(0);
+        // go through all the trades
+        for (int i = 0; i < data.length(); ++i) {
+            JSONObject trade = data.getJSONObject(i);
 
-        // extract the symbol (ticker) and the price from the trade info
-        String symbol = trade.getString("s");
-        BigDecimal price = new BigDecimal(trade.getDouble("p"));
+            // extract the symbol (ticker) and the price from the trade info
+            String symbol = trade.getString("s");
+            Long timestamp = trade.getLong("t");
+            BigDecimal price = new BigDecimal(trade.getDouble("p"));
 
-        PriceData.setPrice(symbol, price);
+            PriceData.setStock(symbol, price, timestamp);
+        }
     }
 
     @Override
