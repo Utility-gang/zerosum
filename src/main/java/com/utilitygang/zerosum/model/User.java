@@ -24,7 +24,7 @@ public class User {
     public User(String username) {
         this.username = username;
         this.cash = new BigDecimal(50000.0);
-        this.portfolioValue = new BigDecimal(50000.0);
+        this.portfolioValue = this.cash;
     }
 
     public User() {
