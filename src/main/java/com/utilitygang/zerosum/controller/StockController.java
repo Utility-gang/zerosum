@@ -1,6 +1,7 @@
 package com.utilitygang.zerosum.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import com.utilitygang.zerosum.model.*;
 import com.utilitygang.zerosum.repository.*;
 import static com.utilitygang.zerosum.data.PriceData.getPriceForStockAmount;
+import static com.utilitygang.zerosum.data.PriceData.getPrice;
 
 @Controller
 public class StockController {
@@ -54,10 +56,11 @@ public class StockController {
     }
 
     @PostMapping("/stocks/{company_id}/sell")
-    public String stocksSell(@PathVariable String company_id, @RequestParam(required = true) Double amount,
+    public String stocksSell(@PathVariable String company_id, @RequestParam(required = true) BigDecimal monetaryValue,
             RedirectAttributes attr, @AuthenticationPrincipal DefaultOidcUser principal, HttpServletRequest req) {
         // get the stock value first thing
-        BigDecimal stock_value = getPriceForStockAmount(company_id, amount);
+//        BigDecimal stock_value = getPriceForStockAmount(company_id, amount);
+        Double amount = monetaryValue.divide(getPrice(company_id), 2, RoundingMode.HALF_UP).doubleValue();
         User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
         // find out if the user actually has those stocks or not
         if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty()) {
@@ -68,7 +71,7 @@ public class StockController {
             if (stock.getAmount() < amount) {
                 attr.addFlashAttribute("msg", "You do not hold this much " + company_id + " stock.");
             } else {
-                owner.setCash(stock_value.add(owner.getCash()));
+                owner.setCash(monetaryValue.add(owner.getCash()));
                 userRepo.save(owner);
 
                 if (stock.getAmount() - amount == 0) {

@@ -103,6 +103,7 @@ public class IndexController {
         }
 
         model.addAttribute("holdingsAmounts", holdingsAmounts);
+        model.addAttribute("holdingsValues", holdingsValues);
 
         return "index";
     }
