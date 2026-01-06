@@ -15,34 +15,35 @@ public class OpenAiService {
         this.openai = openai;
     }
 
-    public String funnyStockDescription(String symbol, String companyName) {
+    public String funnyStockDescription(String symbol, String companyName, String toneTag) {
         String instructions =
-                "You write short funny stock blurbs for a parody investing game. " +
-                        "Keep it playful and non-defamatory: do NOT accuse companies of crimes/fraud, " +
-                        "do NOT claim insider info, and do NOT give financial advice.";
+                "You write short funny stock blurbs for a parody investing game.\n" +
+                        "Keep it playful and non-defamatory:\n" +
+                        "- Do NOT accuse companies of crimes or fraud\n" +
+                        "- Do NOT claim insider knowledge\n" +
+                        "- Do NOT give financial advice\n\n" +
+                        toneInstructions(toneTag);
 
         String input =
                 "Symbol: " + symbol + "\n" +
                         "Company: " + companyName + "\n" +
                         "Write 1–2 funny sentences for a 'lose-money simulator' UI.";
 
-        ResponseCreateParams params = ResponseCreateParams.builder()
-                .model(ChatModel.GPT_4_1)
-                .instructions(instructions)
-                .input(input)
-                .store(false)
-                .build();
-
         try {
-            Response response = openai.responses().create(params);
+            ResponseCreateParams params = ResponseCreateParams.builder()
+                    .model(ChatModel.GPT_4_1)
+                    .instructions(instructions)
+                    .input(input)
+                    .store(false)
+                    .build();
 
+            Response response = openai.responses().create(params);
 
             String text = OpenAiResponse.extractOutputText(response);
 
-
             return (text == null || text.isBlank())
                     ? fallback()
-                    : text;
+                    : text.trim();
 
         } catch (Exception e) {
             return fallback();
@@ -52,5 +53,25 @@ public class OpenAiService {
     private String fallback() {
         return "This stock is doing interpretive dance… directly into your portfolio.";
     }
-}
 
+    private String toneInstructions(String toneTag) {
+        if (toneTag == null) return "Use playful but neutral financial humor.";
+
+        return switch (toneTag) {
+            case "meme_crash" ->
+                    "Use ironic, meme-aware humor about hype, bag-holders, and retail investor regret.";
+
+            case "slow_bleed" ->
+                    "Use dry, resigned humor about long-term disappointment and underperformance.";
+
+            case "biotech_grinder" ->
+                    "Use dark humor about endless clinical trials, dilution, and false hope.";
+
+            case "hype_ev_burn" ->
+                    "Use sarcastic humor about futuristic promises failing to arrive on schedule.";
+
+            default ->
+                    "Use playful but neutral financial humor.";
+        };
+    }
+}
