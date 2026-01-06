@@ -1,6 +1,8 @@
 package com.utilitygang.zerosum.controller;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,10 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import jakarta.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.utilitygang.zerosum.data.PriceData;
 import com.utilitygang.zerosum.model.*;
 import com.utilitygang.zerosum.repository.*;
 import static com.utilitygang.zerosum.data.PriceData.getPriceForStockAmount;
@@ -28,15 +34,9 @@ public class StockController {
     @Autowired
     CompanyRepository companyRepo;
 
-    @GetMapping("/stocks/{company_id}/live")
-    public String stockLiveUpdate(@PathVariable String company_id, @AuthenticationPrincipal DefaultOidcUser principal) {
-        return "hi";
-
-    }
-
     @GetMapping("/stocks/{company_id}")
     public String stocksIdPage(@PathVariable String company_id, RedirectAttributes attr,
-            @AuthenticationPrincipal DefaultOidcUser principal, Model model) {
+            @AuthenticationPrincipal DefaultOidcUser principal, Model model) throws Exception {
         User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
         Company company = companyRepo.findById(company_id).orElse(null);
         if (company == null) {
@@ -46,6 +46,14 @@ public class StockController {
         Stock stock = stockRepo.findByOwnerAndCompany(owner, company).orElse(new Stock(0.0, null, company));
         model.addAttribute("company", company);
         model.addAttribute("maxValue", stock.getAmount());
+        model.addAttribute("lastPrice", stock.getAmount());
+        List<PriceData.Stock> prices = PriceData.getPrices(company_id);
+        try {
+            model.addAttribute("pricesJson", new ObjectMapper().writeValueAsString(prices));
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
+        model.addAttribute("lastPrice", prices.getLast().time());
         return "stocks/idIndex";
     }
 

@@ -56,12 +56,8 @@ public class FinnhubClient extends WebSocketClient {
         for (int i = 0; i < data.length(); ++i) {
             JSONObject trade = data.getJSONObject(i);
 
-            // extract the symbol (ticker) and the price from the trade info
-            String symbol = trade.getString("s");
-            Long timestamp = trade.getLong("t");
-            BigDecimal price = new BigDecimal(trade.getDouble("p"));
-
-            PriceData.setStock(symbol, price, timestamp);
+            // put values in price data specifically how we want them in the final graph
+            PriceData.setStock(trade.getString("s"), trade.getDouble("p"), trade.getLong("t") / 1000);
         }
     }
 
