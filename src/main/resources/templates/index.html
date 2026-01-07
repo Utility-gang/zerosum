@@ -71,7 +71,7 @@
                 </div>
 
                 <!-- Buy Button -->
-                <div th:replace="~{fragments/buy-button.html :: buy-button(user.cash)}"></div>
+                <div th:replace="~{fragments/buy-button.html :: buy-button(${user.getCash()})}"></div>
 
                 <!-- Sell Button -->
                 <div th:replace="~{fragments/sell-button.html :: sell-button}"></div>

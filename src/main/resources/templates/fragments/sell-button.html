@@ -16,7 +16,7 @@
                class="w-full py-2 rounded-md accent-green-600">
             <p th:id="|sell-display-${company.symbol}|">
                 <strong>0 stocks</strong>
-                <span th:text="(${zeroMoney})"></span>
+                <span th:text="${#numbers.formatCurrency(0)}"></span>
             </p>
         <script th:inline="javascript">
             document.getElementById("sell-selector-" + [[${company.symbol}]])

@@ -13,9 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -32,7 +29,6 @@ public class IndexController {
             HttpServletRequest req) {
 
         Map<String, Double> holdingsAmounts = new java.util.HashMap<>();
-        Map<String, BigDecimal> holdingsValues = new java.util.HashMap<>();
 
         // use this to do the couple of changes in logic
         boolean isRoot = req.getRequestURI().equals("/");
@@ -55,13 +51,8 @@ public class IndexController {
                     model.addAttribute("companies", companyRepository.findAllByStockOwner(user));
                 }
 
-                NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-                // could be done with JS,
-                // but this way slider works if JS is disabled
-                model.addAttribute("zeroMoney", currencyFormatter.format(0));
                 model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(user));
                 model.addAttribute("user", user);
-                model.addAttribute("userCash", currencyFormatter.format(user.getCash()));
             }
         }
 
