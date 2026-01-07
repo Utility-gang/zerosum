@@ -34,10 +34,13 @@ public class FinnhubService {
 
     private final String finnhubKey;
     private final OpenAiService openAiService;
+    private final URI uri;
 
-    public FinnhubService(OpenAiService openAiService) {
+    public FinnhubService(CompanyRepository companyRepository, OpenAiService openAiService) throws Exception {
+        this.companyRepository = companyRepository;
         this.finnhubKey = Dotenv.load().get("FINNHUB_API_KEY");
         this.openAiService = openAiService;
+        this.uri = new URI(String.format("wss://ws.finnhub.io?token=%s", finnhubKey));
     }
 
     @PostConstruct
@@ -55,14 +58,13 @@ public class FinnhubService {
 
     // when the app starts up, open the websocketConnection
 
-    public void openWebsocketConnection() throws Exception {
-        String url = String.format("wss://ws.finnhub.io?token=%s", finnhubKey);
-        URI uri = new URI(url);
-        FinnhubClient client = new FinnhubClient(uri, companyRepository);
+    public void openWebsocketConnection() {
+        FinnhubClient client = new FinnhubClient(uri, companyRepository, this);
         client.connect();
     }
 
-    @PostConstruct
+    // when the app starts up, send GET requests to the quote endpoint
+    // and update the cached price
     public void updateCachedPrices() throws Exception {
         File f = new File("prices.json");
         if (f.exists()) {
