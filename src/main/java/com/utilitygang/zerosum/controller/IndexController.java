@@ -37,7 +37,9 @@ public class IndexController {
         }
 
         // Add portfolio value for navbar
-        if (principal != null) {
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        if (isAuthenticated) {
             User user = userContextService.getUser(principal);
 
             if (user != null) {
