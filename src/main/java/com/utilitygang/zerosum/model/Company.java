@@ -15,6 +15,12 @@ public class Company {
     private String symbol;
 
     private String logo;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "tone_tag")
+    private String toneTag;
     
     @Column(name = "cached_price")
     private BigDecimal cachedPrice;

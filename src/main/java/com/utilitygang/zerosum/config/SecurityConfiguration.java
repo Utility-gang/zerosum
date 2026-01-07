@@ -29,7 +29,7 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/images/**", "/stocks/*").permitAll()
+                        .requestMatchers("/", "/images/**", "/stocks/*", "/news").permitAll()
                         .requestMatchers("/stocks/*/buy", "/stocks/*/sell", "/stocks/*/live").authenticated()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
