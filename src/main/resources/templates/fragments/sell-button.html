@@ -1,6 +1,7 @@
 <form
         th:fragment="sell-button"
-        th:action="@{/stocks/{symbol}/sell(symbol=${company.symbol})}" method="post" class="mt-4 space-y-3">
+        th:action="@{/stocks/{symbol}/sell(symbol=${company.symbol})}" method="post" class="mt-4 space-y-3"
+        xmlns:th="http://www.w3.org/1999/xhtml">
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
         <input type="range"
@@ -18,17 +19,18 @@
             <option value="0" th:label="${zeroMoney}"></option>
             <option th:value="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}" th:label="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}"></option>
         </datalist>
-        <p th:id="|sell-display-${company.symbol}|"
-           th:text="${zeroMoney}"></p>
+            <p th:id="|sell-display-${company.symbol}|"
+               th:text="|0 stocks (${zeroMoney})|"></p>
         <script th:inline="javascript">
             document.getElementById("sell-selector-" + [[${company.symbol}]])
-                .addEventListener("change", (e) => {
+                .addEventListener("input", (e) => {
                     const formatter = new Intl.NumberFormat(
                         "en-US",
                         { style: "currency", currency: "USD", }
                     );
+                    const stockValue = formatter.format(e.currentTarget.value * [[${company.getCurrPrice()}]]);
                     document.getElementById("sell-display-" + [[${company.symbol}]])
-                        .innerText = formatter.format(e.currentTarget.value);
+                        .innerHTML = `<strong>${e.currentTarget.value} stocks</strong> (${stockValue} est.)`;
                 });
         </script>
     </div>

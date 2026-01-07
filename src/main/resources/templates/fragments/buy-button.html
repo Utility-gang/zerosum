@@ -8,7 +8,7 @@
         <input type="range"
                min="0"
                th:max="${user.cash}"
-               step="0.25"
+               step="${user.cash}/ ${company.getCurrPrice() / 4}"
                value="0"
                required
                name="amount"
@@ -21,7 +21,7 @@
             <option th:value="${user.cash}" th:label="${user.cash}"></option>
         </datalist>
         <p th:id="|buy-display-${company.symbol}|"
-           th:text="${zeroMoney}"></p>
+           th:text="|${zeroMoney} (0 stocks)|"></p>
         <script th:inline="javascript">
             document.getElementById("buy-selector-" + [[${company.symbol}]])
                 .addEventListener("change", (e) => {
@@ -29,9 +29,9 @@
                         "en-US",
                         { style: "currency", currency: "USD", }
                     );
+                    const stockValue = formatter.format(e.currentTarget.value);
                     document.getElementById("buy-display-" + [[${company.symbol}]])
-                        .innerText = formatter.format(e.currentTarget.value);
-                });
+                        .innerHTML = `<strong>${stockValue}</strong> (${e.currentTarget.value/[[${company.getCurrPrice()}]]} stocks)`;                });
         </script>
     </div>
     <button type="submit"
