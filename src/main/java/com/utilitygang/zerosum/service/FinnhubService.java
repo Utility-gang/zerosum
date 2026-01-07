@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Profile("!test")
@@ -35,11 +36,13 @@ public class FinnhubService {
     private final String finnhubKey;
     private final OpenAiService openAiService;
     private final URI uri;
+    private int timeout;
 
     public FinnhubService(CompanyRepository companyRepository, OpenAiService openAiService) throws Exception {
         this.companyRepository = companyRepository;
         this.finnhubKey = Dotenv.load().get("FINNHUB_API_KEY");
         this.openAiService = openAiService;
+        this.timeout = 0;
         this.uri = new URI(String.format("wss://ws.finnhub.io?token=%s", finnhubKey));
     }
 
@@ -59,6 +62,13 @@ public class FinnhubService {
     // when the app starts up, open the websocketConnection
 
     public void openWebsocketConnection() {
+        try {
+            TimeUnit.SECONDS.sleep(timeout);
+            timeout = timeout == 0 ? 1 : timeout * 2;
+        } catch (Exception e) {
+            System.out.println("error sleeping");
+            return;
+        }
         FinnhubClient client = new FinnhubClient(uri, companyRepository, this);
         client.connect();
     }
