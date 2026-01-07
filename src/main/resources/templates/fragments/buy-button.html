@@ -24,7 +24,7 @@
            th:text="|${zeroMoney} (0 stocks)|"></p>
         <script th:inline="javascript">
             document.getElementById("buy-selector-" + [[${company.symbol}]])
-                .addEventListener("change", (e) => {
+                .addEventListener("input", (e) => {
                     const formatter = new Intl.NumberFormat(
                         "en-US",
                         { style: "currency", currency: "USD", }
