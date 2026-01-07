@@ -34,7 +34,7 @@
 					<div class="w-1/2 mx-auto flex flex-col text-center">
 						<div th:if="${pricesJson}" id="chart"></div>
 						<div th:if="${pricesJson}" id="live-chart" th:attr="hx-get='/stocks/' + ${company.symbol} + '/live'" hx-trigger="every 1s" hx-swap="none" hx-vals='js:{"since": lastTime}'></div>
-						<img th:unless="${pricesJson}" th:src="${logo}">
+						<img th:unless="${pricesJson}" th:src="${company.logo}">
 						<p th:unless="${pricesJson}" th:text="${company.symbol}"></p>
 						<p th:unless="${pricesJson}" th:text="${company.currPrice}"></p>
 					</div>
