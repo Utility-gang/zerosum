@@ -5,8 +5,8 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
         <input type="range"
                min="0"
-               th:max="${holdingsValues.getOrDefault(company.symbol, 0.0)}"
-               name="monetaryValue"
+               th:max="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}"
+               name="amount"
                step="0.25"
                value="0"
                required
@@ -16,7 +16,7 @@
                class="w-full py-2 rounded-md accent-green-600">
         <datalist id="sell-limits" class="flex flex-row justify-between">
             <option value="0" th:label="${zeroMoney}"></option>
-            <option th:value="${holdingsValues.getOrDefault(company.symbol, 0.0)}" th:label="${holdingsValues.getOrDefault(company.symbol, 0.0)}"></option>
+            <option th:value="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}" th:label="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}"></option>
         </datalist>
         <p th:id="|sell-display-${company.symbol}|"
            th:text="${zeroMoney}"></p>
@@ -34,14 +34,14 @@
     </div>
 
 
-    <div th:if="${holdingsValues.getOrDefault(company.symbol, 0.0)}" >
+    <div th:if="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}" >
         <button type="submit"
                 class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 shadow-sm hover:shadow-md">
             Sell Stock
         </button>
     </div>
     <!--grey out sell button if there is no stock to sell-->
-    <div th:unless="${holdingsValues.getOrDefault(company.symbol, 0.0)}" >
+    <div th:unless="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}" >
         <button disabled
                 class="w-full bg-gray-300 text-white font-semibold py-2 px-4 rounded-md shadow-sm ">
             Sell Stock

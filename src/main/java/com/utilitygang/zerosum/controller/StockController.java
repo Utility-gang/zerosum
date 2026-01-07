@@ -1,7 +1,6 @@
 package com.utilitygang.zerosum.controller;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import com.utilitygang.zerosum.model.*;
 import com.utilitygang.zerosum.repository.*;
 import static com.utilitygang.zerosum.data.PriceData.getPriceForStockAmount;
-import static com.utilitygang.zerosum.data.PriceData.getPrice;
 
 @Controller
 public class StockController {
@@ -38,29 +36,22 @@ public class StockController {
         if (owner.getCash().subtract(stock_value).compareTo(BigDecimal.ZERO) < 0) {
             attr.addFlashAttribute("msg", "You do not have enough money.");
         } else {
-            owner.setCash(owner.getCash().subtract(stock_value));
-            userRepo.save(owner);
-
             Stock stock;
-            if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty()) {
+            if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty())
                 stock = new Stock(amount, owner, companyRepo.findById(company_id).get());
-            } else {
+            else
                 stock = stockRepo.findByOwnerAndCompanySymbol(owner, company_id).get();
-                stock.setAmount(stock.getAmount() + amount);
-                owner.setCash(owner.getCash().subtract(stock_value));
-                userRepo.save(owner);
-            }
             stockRepo.save(stock);
+            owner.setCash(owner.getCash().subtract(stock_value));
         }
         return "redirect:" + req.getHeader("Referer");
     }
 
     @PostMapping("/stocks/{company_id}/sell")
-    public String stocksSell(@PathVariable String company_id, @RequestParam(required = true) BigDecimal monetaryValue,
+    public String stocksSell(@PathVariable String company_id, @RequestParam(required = true) Double amount,
             RedirectAttributes attr, @AuthenticationPrincipal DefaultOidcUser principal, HttpServletRequest req) {
         // get the stock value first thing
-//        BigDecimal stock_value = getPriceForStockAmount(company_id, amount);
-        Double amount = monetaryValue.divide(getPrice(company_id), 2, RoundingMode.HALF_UP).doubleValue();
+        BigDecimal stock_value = getPriceForStockAmount(company_id, amount);
         User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
         // find out if the user actually has those stocks or not
         if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty()) {
@@ -71,15 +62,9 @@ public class StockController {
             if (stock.getAmount() < amount) {
                 attr.addFlashAttribute("msg", "You do not hold this much " + company_id + " stock.");
             } else {
-                owner.setCash(monetaryValue.add(owner.getCash()));
-                userRepo.save(owner);
-
-                if (stock.getAmount() - amount == 0) {
-                    stockRepo.delete(stock);
-                } else {
-                    stock.setAmount(stock.getAmount() - amount);
-                    stockRepo.save(stock);
-                }
+                owner.setCash(stock_value.add(owner.getCash()));
+                stock.setAmount(stock.getAmount() - amount);
+                stockRepo.save(stock);
             }
         }
         return "redirect:" + req.getHeader("Referer");
