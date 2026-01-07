@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-
 @Service
 @Profile("!test")
 public class FinnhubService {
@@ -29,11 +28,13 @@ public class FinnhubService {
     private final CompanyRepository companyRepository;
     private final String finnhubKey;
     private final OpenAiService openAiService;
+    private final URI uri;
 
-    public FinnhubService(CompanyRepository companyRepository, OpenAiService openAiService) {
+    public FinnhubService(CompanyRepository companyRepository, OpenAiService openAiService) throws Exception {
         this.companyRepository = companyRepository;
         this.finnhubKey = Dotenv.load().get("FINNHUB_API_KEY");
         this.openAiService = openAiService;
+        this.uri = new URI(String.format("wss://ws.finnhub.io?token=%s", finnhubKey));
     }
 
     @PostConstruct
@@ -46,13 +47,10 @@ public class FinnhubService {
 
     // when the app starts up, open the websocketConnection
 
-    public void openWebsocketConnection() throws Exception {
-        String url = String.format("wss://ws.finnhub.io?token=%s", finnhubKey);
-        URI uri = new URI(url);
-        FinnhubClient client = new FinnhubClient(uri, companyRepository);
+    public void openWebsocketConnection() {
+        FinnhubClient client = new FinnhubClient(uri, companyRepository, this);
         client.connect();
     }
-
 
     // when the app starts up, send GET requests to the quote endpoint
     // and update the cached price
@@ -61,7 +59,8 @@ public class FinnhubService {
         RestTemplate restTemplate = new RestTemplate();
 
         for (Company company : companyRepository.findAll()) {
-            String url = String.format("https://finnhub.io/api/v1/quote?symbol=%s&token=%s", company.getSymbol(), finnhubKey);
+            String url = String.format("https://finnhub.io/api/v1/quote?symbol=%s&token=%s", company.getSymbol(),
+                    finnhubKey);
 
             Map<String, Object> response = restTemplate.getForObject(url, Map.class);
             if (response != null && response.containsKey("c")) {
@@ -83,8 +82,7 @@ public class FinnhubService {
             String symbol = company.getSymbol();
             String url = String.format(
                     "https://finnhub.io/api/v1/stock/profile2?symbol=%s&token=%s",
-                    symbol, finnhubKey
-            );
+                    symbol, finnhubKey);
 
             try {
                 Map<String, Object> profile = restTemplate.getForObject(url, Map.class);
@@ -116,7 +114,6 @@ public class FinnhubService {
         }
     }
 
-
     // OpenAI description hydration (tone-aware)
 
     private void hydrateMissingDescriptions() {
@@ -128,7 +125,7 @@ public class FinnhubService {
             try {
                 String description = openAiService.funnyStockDescription(
                         company.getSymbol(),
-                        company.getToneTag()      //  tone-driven humor
+                        company.getToneTag() // tone-driven humor
                 );
 
                 if (description != null && !description.isBlank()) {
@@ -143,7 +140,5 @@ public class FinnhubService {
             }
         }
     }
-
-
 
 }
