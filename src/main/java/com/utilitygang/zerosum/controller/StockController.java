@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.utilitygang.zerosum.data.PriceData;
 import com.utilitygang.zerosum.model.*;
 import com.utilitygang.zerosum.repository.*;
+import com.utilitygang.zerosum.service.UserContextService;
+
 import static com.utilitygang.zerosum.data.PriceData.getPriceForStockAmount;
 
 @Controller
@@ -33,19 +35,24 @@ public class StockController {
     StockRepository stockRepo;
     @Autowired
     CompanyRepository companyRepo;
+    @Autowired
+    UserContextService userContextService;
 
     @GetMapping("/stocks/{company_id}")
     public String stocksIdPage(@PathVariable String company_id, RedirectAttributes attr,
             @AuthenticationPrincipal DefaultOidcUser principal, Model model) throws Exception {
-        User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
+        User owner = userContextService.getUser(principal);
         Company company = companyRepo.findById(company_id).orElse(null);
         if (company == null) {
             attr.addFlashAttribute("msg", "This stock doesn't exist/isn't currently tradeable on ZeroSum.");
             return "redirect:/stocks";
         }
         Stock stock = stockRepo.findByOwnerAndCompany(owner, company).orElse(new Stock(0.0, null, company));
+        model.addAttribute("user", owner);
         model.addAttribute("company", company);
         model.addAttribute("maxValue", stock.getAmount());
+        model.addAttribute("holdingsAmounts", userContextService.getUserHoldings(owner));
+        model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(owner));
         List<PriceData.Stock> prices = PriceData.getPrices(company_id);
         if (!prices.isEmpty()) {
             try {
@@ -68,19 +75,16 @@ public class StockController {
         if (owner.getCash().subtract(stock_value).compareTo(BigDecimal.ZERO) < 0) {
             attr.addFlashAttribute("msg", "You do not have enough money.");
         } else {
-            owner.setCash(owner.getCash().subtract(stock_value));
-            userRepo.save(owner);
-
             Stock stock;
             if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty()) {
                 stock = new Stock(amount, owner, companyRepo.findById(company_id).get());
             } else {
                 stock = stockRepo.findByOwnerAndCompanySymbol(owner, company_id).get();
                 stock.setAmount(stock.getAmount() + amount);
-                owner.setCash(owner.getCash().subtract(stock_value));
-                userRepo.save(owner);
             }
             stockRepo.save(stock);
+            owner.setCash(owner.getCash().subtract(stock_value));
+            userRepo.save(owner);
         }
         return "redirect:" + req.getHeader("Referer");
     }
@@ -102,7 +106,6 @@ public class StockController {
             } else {
                 owner.setCash(stock_value.add(owner.getCash()));
                 userRepo.save(owner);
-
                 if (stock.getAmount() - amount == 0) {
                     stockRepo.delete(stock);
                 } else {

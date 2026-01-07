@@ -56,11 +56,11 @@ public class PriceData {
     public static BigDecimal getPrice(String symbol) {
         List<Stock> list = prices.get(symbol);
         if (list == null)
-            return new BigDecimal(0);
+            return new BigDecimal(1.0);
 
         synchronized (list) {
             return list.isEmpty()
-                    ? new BigDecimal(0)
+                    ? new BigDecimal(1.0)
                     : new BigDecimal(list.get(list.size() - 1).value());
         }
     }

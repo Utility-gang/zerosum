@@ -41,7 +41,7 @@
 
 					<div class="w-1/2 mx-auto grid place-items-center">
 						<div class="w-1/2">
-							<div th:replace="~{fragments/buyButton.html :: buyButton(${company.symbol})}"></div>
+							<div th:replace="~{fragments/buy-button.html :: buy-button(${user.getCash()})}"></div>
 						</div>
 
 						<div class="w-1/2">

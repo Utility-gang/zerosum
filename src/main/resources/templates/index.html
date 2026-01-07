@@ -30,7 +30,6 @@
 
 					<!-- Stock Card Content -->
 					<div class="p-4 sm:p-6">
-
 						<!-- Stock Fragment (logo, symbol, price) -->
 						<div th:replace="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})}"></div>
 
@@ -53,8 +52,11 @@
 							</p>
 						</div>
 
-						<!-- Buy Button that is not rendered on /portfolio -->
-						<div th:unless="${user}" th:replace="~{fragments/buyButton.html :: buyButton(${company.symbol})}"></div>
+						<div th:if="${user}" th:replace="~{fragments/buy-button.html :: buy-button(${user.getCash()})}"></div>
+						<!-- Buy Button that just links to login page if there isn't a user -->
+						<button th:unless="${user}" onclick="location.href='/login'" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 shadow-sm hover:shadow-md">
+							Buy Stock
+						</button>
 					</div>
 				</div>
 			</div>
