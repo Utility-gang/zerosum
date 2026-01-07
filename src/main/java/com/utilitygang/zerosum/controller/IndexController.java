@@ -40,11 +40,7 @@ public class IndexController {
         boolean isAuthenticated = principal != null;
         model.addAttribute("isAuthenticated", isAuthenticated);
         if (isAuthenticated) {
-            String email = (String) principal.getAttributes().get("email");
-            System.out.println("🔍 DEBUG: Email from principal: " + email);
-
-            User user = userRepository.findUserByUsername(email).orElse(null);
-            System.out.println("🔍 DEBUG: User from database: " + (user == null ? "NULL" : user.getUsername()));
+            User user = userContextService.getUser(principal);
 
             if (user != null) {
                 holdings = userContextService.getUserHoldings(user);
