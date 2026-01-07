@@ -23,6 +23,18 @@
                 <a href="/portfolio" class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
                     Portfolio
                 </a>
+                <a
+                        th:unless="${isAuthenticated}"
+                        class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                        href="/oauth2/authorization/okta">
+                    Login/Register
+                </a>
+                <a
+                        th:if="${isAuthenticated}"
+                        class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                        href="/logout">
+                    Logout
+                </a>
             </div>
 
             <!-- Portfolio Value Badge -->

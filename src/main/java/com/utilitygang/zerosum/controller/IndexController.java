@@ -54,7 +54,9 @@ public class IndexController {
         System.out.println("🔍 DEBUG: principal is " + (principal == null ? "NULL" : "NOT NULL"));
 
         // Add portfolio value for navbar
-        if (principal != null) {
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        if (isAuthenticated) {
             String email = (String) principal.getAttributes().get("email");
             System.out.println("🔍 DEBUG: Email from principal: " + email);
 
