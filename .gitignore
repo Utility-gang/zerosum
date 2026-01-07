@@ -37,3 +37,4 @@ build/
 .env
 nohup.out
 **/news.json
+**/prices.json
