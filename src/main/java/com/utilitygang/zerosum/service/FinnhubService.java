@@ -46,12 +46,13 @@ public class FinnhubService {
         this.uri = new URI(String.format("wss://ws.finnhub.io?token=%s", finnhubKey));
     }
 
+    // when the app starts up, open the websocketConnection
     @PostConstruct
     public void init() throws Exception {
         openWebsocketConnection();
         hydrateMissingLogos();
         hydrateMissingDescriptions();
-        updateCachedPrices();
+        // updateCachedPrices();
     }
 
     @PreDestroy

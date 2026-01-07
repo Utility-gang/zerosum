@@ -53,11 +53,8 @@
 							</p>
 						</div>
 
-						<!-- Buy Button -->
-						<div th:replace="~{fragments/buyButton.html :: buyButton(${company.symbol})}"></div>
-
-						<!-- Sell Button -->
-						<div th:replace="~{fragments/sell-button.html :: sell-button}"></div>
+						<!-- Buy Button that is not rendered on /portfolio -->
+						<div th:unless="${user}" th:replace="~{fragments/buyButton.html :: buyButton(${company.symbol})}"></div>
 					</div>
 				</div>
 			</div>
