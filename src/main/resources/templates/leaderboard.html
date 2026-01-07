@@ -18,9 +18,24 @@
         <p class="text-gray-600">The biggest losers</p>
     </div>
 
-    <ul th:each="user : ${topUsers}">
-        <li><span th:text="${user.username}"></span> - <span th:text="${user.portfolioValue}"></span></li>
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">User</th>
+                <th scope="col">Portfolio Value</th>
+                <th scope="col">Losses</th>
+                <th scope="col">Percentage Loss</th>
+            </tr>
+        </thead>
+        <tbody th:each="user : ${topUsers}">
+            <tr>
+                <th th:text="${user.username}"></th>
+                <td th:text="${user.portfolioValue}"></td>
+                <td th:text="${user.loss}"></td>
+                <td th:text="${user.percentageLoss} + '%'"></td>
+            </tr>
+        </tbody>
+    </table>
 
 
 </div>

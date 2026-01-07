@@ -21,10 +21,18 @@ public class User {
 
     private BigDecimal portfolioValue;
 
+    @Transient
+    private BigDecimal loss;
+
+    @Transient
+    private Float percentageLoss;
+
     public User(String username) {
         this.username = username;
         this.cash = new BigDecimal(50000.0);
         this.portfolioValue = new BigDecimal(50000.0);
+        this.loss = new BigDecimal(0.0);
+        this.percentageLoss = new Float(0.0);
     }
 
     public User() {
