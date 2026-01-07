@@ -6,9 +6,9 @@
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
         <input type="range"
-               min="0"
+               th:min="${company.getCurrPrice()} / 4"
                th:max="${user.cash}"
-               th:step="(${company.getCurrPrice()} / 4)"
+               th:step="${company.getCurrPrice()} / 4"
                value="0"
                required
                name="amount"
@@ -16,7 +16,7 @@
                orient="horizontal"
                class="w-full py-2 rounded-md accent-green-600">
         <p th:id="|buy-display-${company.symbol}|">
-            <strong th:text="|${zeroMoney} |"></strong> (0 stocks)
+        <strong th:text="${#numbers.formatCurrency(company.getCurrPrice() / 4)}"></strong> (0.25 stocks)
         </p>
         <script th:inline="javascript">
             document.getElementById("buy-selector-" + [[${company.symbol}]])
@@ -26,8 +26,11 @@
                         { style: "currency", currency: "USD", }
                     );
                     const stockValue = formatter.format(e.currentTarget.value);
+                    const numStocks = 0.01 *
+                        Math.round(100 * e.currentTarget.value / [[${company.getCurrPrice()}]]);
                     document.getElementById("buy-display-" + [[${company.symbol}]])
-                        .innerHTML = `<strong>${stockValue}</strong> (${e.currentTarget.value/[[${company.getCurrPrice()}]]} stocks est.)`;                });
+                        .innerHTML = `<strong>${stockValue}</strong> (${numStocks} stocks est.)`;
+                });
         </script>
     </div>
 

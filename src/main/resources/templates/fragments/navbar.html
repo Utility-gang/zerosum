@@ -23,6 +23,21 @@
                 <a href="/portfolio" class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
                     Portfolio
                 </a>
+                <a href="/news" class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+                    News
+                </a>
+                <a
+                        th:unless="${isAuthenticated}"
+                        class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
+                        href="/oauth2/authorization/okta">
+                    Login/Register
+                </a>
+                <a
+                        th:if="${isAuthenticated}"
+                        class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
+                        href="/logout">
+                    Logout
+                </a>
             </div>
 
             <!-- Portfolio Value Badge -->
@@ -58,6 +73,21 @@
             </a>
             <a href="/portfolio" class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
                 Portfolio
+            </a>
+            <a href="/news" class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
+                News
+            </a>
+            <a
+                    th:unless="${isAuthenticated}"
+                    class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
+                    href="/oauth2/authorization/okta">
+                Login/Register
+            </a>
+            <a
+                    th:if="${isAuthenticated}"
+                    class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
+                    href="/logout">
+                Logout
             </a>
             <!-- Portfolio value for mobile -->
             <div th:if="${totalPortfolioValue != null}"

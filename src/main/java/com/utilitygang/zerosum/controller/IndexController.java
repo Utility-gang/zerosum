@@ -1,13 +1,9 @@
 package com.utilitygang.zerosum.controller;
 
-import com.utilitygang.zerosum.model.Company;
 import com.utilitygang.zerosum.model.User;
-import com.utilitygang.zerosum.model.Stock;
 import com.utilitygang.zerosum.repository.CompanyRepository;
-import com.utilitygang.zerosum.repository.UserRepository;
-import com.utilitygang.zerosum.repository.StockRepository;
-import com.utilitygang.zerosum.service.PortfolioService;
 
+import com.utilitygang.zerosum.service.UserContextService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +12,11 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Controller
 public class IndexController {
@@ -31,13 +25,7 @@ public class IndexController {
     CompanyRepository companyRepository;
 
     @Autowired
-    StockRepository stockRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PortfolioService portfolioService;
+    UserContextService userContextService;
 
     @GetMapping({ "/", "/portfolio" })
     public String indexAndPortfolio(Model model, @AuthenticationPrincipal DefaultOidcUser principal,
@@ -48,62 +36,36 @@ public class IndexController {
 
         // use this to do the couple of changes in logic
         boolean isRoot = req.getRequestURI().equals("/");
-        if (isRoot)
-            model.addAttribute("companies", companyRepository.findAll());
 
-        // DEBUG: Log authentication status
-        System.out.println("🔍 DEBUG: principal is " + (principal == null ? "NULL" : "NOT NULL"));
+        if (isRoot) {
+            model.addAttribute("companies", companyRepository.findAll());
+        }
 
         // Add portfolio value for navbar
-        if (principal != null) {
-            String email = (String) principal.getAttributes().get("email");
-            System.out.println("🔍 DEBUG: Email from principal: " + email);
-
-            User user = userRepository.findUserByUsername(email).orElse(null);
-            System.out.println("🔍 DEBUG: User from database: " + (user == null ? "NULL" : user.getUsername()));
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        if (isAuthenticated) {
+            User user = userContextService.getUser(principal);
 
             if (user != null) {
-                List<Stock> userStocks = stockRepository.findByOwnerId(user.getId());
-                holdingsAmounts = userStocks.stream().collect(Collectors.toMap(
-                        stock -> stock.getCompany().getSymbol(),
-                        Stock::getAmount,
-                        (existing, replacement) -> existing
-                ));
-
-                holdingsValues = userStocks.stream().collect(Collectors.toMap(
-                        stock -> stock.getCompany().getSymbol(),
-                        Stock::getValue,
-                        (existing, replacement) -> existing
-                ));
+                holdingsAmounts = userContextService.getUserHoldings(user);
 
                 // add all the companies that the user has bought
                 if (!isRoot) {
                     model.addAttribute("companies", companyRepository.findAllByStockOwner(user));
-
-//                    model.addAttribute("ownedStocks", stockRepository.findByOwnerId(user.getId()));
-//                    model.addAttribute("ownedStocks", stockRepository.findByOwnerId(user.getId()).get(0).getAmount());
                 }
-
-                BigDecimal totalPortfolioValue = portfolioService.calculateTotalPortfolioValue(user);
-                System.out.println("🔍 DEBUG: Total portfolio value: " + totalPortfolioValue);
 
                 NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
                 // could be done with JS,
                 // but this way slider works if JS is disabled
                 model.addAttribute("zeroMoney", currencyFormatter.format(0));
-                model.addAttribute("totalPortfolioValue", currencyFormatter.format(totalPortfolioValue));
-                model.addAttribute("totalPortfolioValueNum", totalPortfolioValue);
+                model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(user));
                 model.addAttribute("user", user);
                 model.addAttribute("userCash", currencyFormatter.format(user.getCash()));
-            } else {
-                System.out.println("⚠️ DEBUG: User not found in database for email: " + email);
             }
-        } else {
-            System.out.println("⚠️ DEBUG: Principal is null - user not authenticated");
         }
 
         model.addAttribute("holdingsAmounts", holdingsAmounts);
-        model.addAttribute("holdingsValues", holdingsValues);
 
         return "index";
     }
