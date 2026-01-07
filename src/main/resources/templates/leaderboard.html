@@ -7,36 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
-<!-- Include navbar -->
-<div th:replace="~{fragments/navbar.html :: navbar}"></div>
+    <!-- Include navbar -->
+    <div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
-<!-- Main Content -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg: px-8 py-8">
-    <!-- Hero Section -->
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">Leaderboard</h1>
-        <p class="text-gray-600">The biggest losers</p>
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg: px-8 py-8">
+        <!-- Hero Section -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Leaderboard</h1>
+            <p class="text-gray-600">The biggest losers</p>
+        </div>
+
+        <!-- Include leaderboard table -->
+        <div th:replace="~{fragments/leaderboard-table.html :: leaderboard}"></div>
+
     </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">User</th>
-                <th scope="col">Portfolio Value</th>
-                <th scope="col">Losses</th>
-                <th scope="col">Percentage Loss</th>
-            </tr>
-        </thead>
-        <tbody th:each="user : ${topUsers}">
-            <tr>
-                <th th:text="${user.username}"></th>
-                <td th:text="${user.portfolioValue}"></td>
-                <td th:text="${user.loss}"></td>
-                <td th:text="${user.percentageLoss} + '%'"></td>
-            </tr>
-        </tbody>
-    </table>
-
-
-</div>
 </body>

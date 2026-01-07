@@ -1,0 +1,20 @@
+<table th:fragment="leaderboard">
+    <thead>
+    <tr>
+        <th scope="col">Rank</th>
+        <th scope="col">User</th>
+        <th scope="col">Portfolio Value</th>
+        <th scope="col">Loss</th>
+        <th scope="col">Percentage Loss</th>
+    </tr>
+    </thead>
+    <tbody th:each="user, iterStat : ${topUsers}">
+    <tr>
+        <th scope="row" th:text="${iterStat.count}"></th>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.portfolioValue}"></td>
+        <td th:text="${user.loss}"></td>
+        <td th:text="${user.percentageLoss} + '%'"></td>
+    </tr>
+    </tbody>
+</table>
