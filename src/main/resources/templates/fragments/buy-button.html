@@ -14,12 +14,7 @@
                name="amount"
                th:id="|buy-selector-${company.symbol}|"
                orient="horizontal"
-               list="spend-limits"
                class="w-full py-2 rounded-md accent-green-600">
-        <datalist id="spend-limits" class="flex flex-row justify-between">
-            <option value="0" th:label="${zeroMoney}"></option>
-            <option th:value="${user.cash}" th:label="${user.cash}"></option>
-        </datalist>
         <p th:id="|buy-display-${company.symbol}|"
            th:text="|${zeroMoney} (0 stocks)|"></p>
         <script th:inline="javascript">

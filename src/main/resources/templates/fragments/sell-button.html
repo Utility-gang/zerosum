@@ -13,12 +13,7 @@
                required
                th:id="|sell-selector-${company.symbol}|"
                orient="horizontal"
-               list="sell-limits"
                class="w-full py-2 rounded-md accent-green-600">
-        <datalist id="sell-limits" class="flex flex-row justify-between">
-            <option value="0" th:label="${zeroMoney}"></option>
-            <option th:value="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}" th:label="${holdingsAmounts.getOrDefault(company.symbol, 0.0)}"></option>
-        </datalist>
             <p th:id="|sell-display-${company.symbol}|"
                th:text="|0 stocks (${zeroMoney})|"></p>
         <script th:inline="javascript">
