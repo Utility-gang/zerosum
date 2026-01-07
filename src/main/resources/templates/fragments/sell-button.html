@@ -14,8 +14,10 @@
                th:id="|sell-selector-${company.symbol}|"
                orient="horizontal"
                class="w-full py-2 rounded-md accent-green-600">
-            <p th:id="|sell-display-${company.symbol}|"
-               th:text="|0 stocks (${zeroMoney})|"></p>
+            <p th:id="|sell-display-${company.symbol}|">
+                <strong>0 stocks</strong>
+                <span th:text="(${zeroMoney})"></span>
+            </p>
         <script th:inline="javascript">
             document.getElementById("sell-selector-" + [[${company.symbol}]])
                 .addEventListener("input", (e) => {

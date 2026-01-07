@@ -15,8 +15,9 @@
                th:id="|buy-selector-${company.symbol}|"
                orient="horizontal"
                class="w-full py-2 rounded-md accent-green-600">
-        <p th:id="|buy-display-${company.symbol}|"
-           th:text="|${zeroMoney} (0 stocks)|"></p>
+        <p th:id="|buy-display-${company.symbol}|">
+            <strong th:text="|${zeroMoney} |"></strong> (0 stocks)
+        </p>
         <script th:inline="javascript">
             document.getElementById("buy-selector-" + [[${company.symbol}]])
                 .addEventListener("input", (e) => {
@@ -26,7 +27,7 @@
                     );
                     const stockValue = formatter.format(e.currentTarget.value);
                     document.getElementById("buy-display-" + [[${company.symbol}]])
-                        .innerHTML = `<strong>${stockValue}</strong> (${e.currentTarget.value/[[${company.getCurrPrice()}]]} stocks)`;                });
+                        .innerHTML = `<strong>${stockValue}</strong> (${e.currentTarget.value/[[${company.getCurrPrice()}]]} stocks est.)`;                });
         </script>
     </div>
 
