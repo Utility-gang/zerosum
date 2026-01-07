@@ -128,7 +128,6 @@ public class FinnhubService {
             try {
                 String description = openAiService.funnyStockDescription(
                         company.getSymbol(),
-                        company.getSymbol(),
                         company.getToneTag()      //  tone-driven humor
                 );
 
