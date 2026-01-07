@@ -15,7 +15,7 @@ public class OpenAiService {
         this.openai = openai;
     }
 
-    public String funnyStockDescription(String symbol, String companyName, String toneTag) {
+    public String funnyStockDescription(String symbol, String toneTag) {
         String instructions =
                 "You write short funny stock blurbs for a parody investing game.\n" +
                         "Keep it playful and non-defamatory:\n" +
@@ -26,8 +26,9 @@ public class OpenAiService {
 
         String input =
                 "Symbol: " + symbol + "\n" +
-                        "Company: " + companyName + "\n" +
-                        "Write 1–2 funny sentences for a 'lose-money simulator' UI.";
+                        "Tone: " + toneTag + "\n" +
+                        "Context: This is a lose-money simulator.\n" +
+                        "Write 1–2 short, funny sentences explaining why this stock hurts emotionally.";
 
         try {
             ResponseCreateParams params = ResponseCreateParams.builder()
