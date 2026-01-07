@@ -46,14 +46,15 @@ public class StockController {
         Stock stock = stockRepo.findByOwnerAndCompany(owner, company).orElse(new Stock(0.0, null, company));
         model.addAttribute("company", company);
         model.addAttribute("maxValue", stock.getAmount());
-        model.addAttribute("lastPrice", stock.getAmount());
         List<PriceData.Stock> prices = PriceData.getPrices(company_id);
-        try {
-            model.addAttribute("pricesJson", new ObjectMapper().writeValueAsString(prices));
-        } catch (Exception e) {
-            throw new Exception(e);
+        if (!prices.isEmpty()) {
+            try {
+                model.addAttribute("pricesJson", new ObjectMapper().writeValueAsString(prices));
+                model.addAttribute("lastPrice", prices.getLast().time());
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
         }
-        model.addAttribute("lastPrice", prices.getLast().time());
         return "stocks/idIndex";
     }
 

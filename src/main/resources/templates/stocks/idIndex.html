@@ -64,7 +64,7 @@
 			<p class="mt-1 text-sm text-gray-500">Check back later for available stocks.</p>
 		</div>
 	</div>
-	<script th:inline="javascript">
+    <script th:inline="javascript" th:if="${pricesJson}">
         let lastTime = /*[[${lastPrice}]]*/;
 		const chart = LightweightCharts.createChart(document.getElementById('chart'), { width: 600, height: 300 });
 		const lineSeries = chart.addSeries(LightweightCharts.LineSeries);
