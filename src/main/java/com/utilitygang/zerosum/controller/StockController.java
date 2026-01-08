@@ -54,7 +54,7 @@ public class StockController {
         model.addAttribute("company", company);
         model.addAttribute("maxValue", stock.getAmount());
         model.addAttribute("holdingsAmounts", holdings);
-        if (holdings.getOrDefault(company_id, 0.0) == 0.0) {
+        if (holdings.getOrDefault(company_id, 0.0) != 0.0) {
             model.addAttribute("basePrice", holdings.get(company_id));
         }
         model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(owner));
