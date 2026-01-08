@@ -53,6 +53,7 @@ public class IndexController {
 
                 model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(user));
                 model.addAttribute("user", user);
+
             }
         }
 

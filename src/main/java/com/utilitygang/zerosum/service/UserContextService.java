@@ -42,6 +42,15 @@ public class UserContextService {
         }
     }
 
+    public String getUserCashFormatted(User user) {
+        if (user != null) {
+            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+            return currencyFormatter.format(user.getCash());
+        } else {
+            return "";
+        }
+    }
+
     public Map<String, Double> getUserHoldings(User user) {
         List<Stock> userStocks = stockRepository.findByOwnerId(user.getId());
         return userStocks.stream().collect(Collectors.toMap(
