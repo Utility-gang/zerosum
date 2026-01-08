@@ -30,7 +30,7 @@ public class IndexController {
         boolean isRoot = req.getRequestURI().equals("/");
 
         if (isRoot) {
-            model.addAttribute("companies", companyRepository.findAll());
+            model.addAttribute("companies", companyRepository.findAllByOrderBySymbolAsc());
         }
 
         // Add portfolio value for navbar
@@ -45,6 +45,7 @@ public class IndexController {
                 }
                 model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(user));
                 model.addAttribute("user", user);
+
             }
         }
 

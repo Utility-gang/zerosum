@@ -1,7 +1,16 @@
 <div th:fragment="stock(logo, symbol, currPrice)">
-	<a th:href="@{/stocks/{symbol}(symbol=${symbol})}">
-		<img th:src="${logo}">
-		<p th:text="${symbol}"></p>
-		<p th:text="${#numbers.formatCurrency(currPrice)}"></p>
-	</a>
+    <img th:src="${logo}">
+    <p th:text="${symbol}"></p>
+    <div
+        th:hx-get="@{/stocks/{symbol}/price(symbol=${symbol})}"
+        hx-trigger="every 3s"
+        hx-swap="innerHTML"
+        th:attr="hx-vals=|{&quot;lastPrice&quot;: ${currPrice}}|">
+
+        <span th:replace="~{fragments/stock-price :: stock-price(
+            price=${currPrice},
+            direction='flat'
+        )}"></span>
+
+    </div>
 </div>

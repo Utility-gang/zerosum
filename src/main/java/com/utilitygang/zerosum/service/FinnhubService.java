@@ -52,7 +52,7 @@ public class FinnhubService {
         openWebsocketConnection();
         hydrateMissingLogos();
         hydrateMissingDescriptions();
-        // updateCachedPrices();
+        updateCachedPrices();
     }
 
     @PreDestroy
@@ -73,6 +73,7 @@ public class FinnhubService {
         FinnhubClient client = new FinnhubClient(uri, companyRepository, this);
         client.connect();
     }
+
 
     // when the app starts up, send GET requests to the quote endpoint
     // and update the cached price
@@ -166,5 +167,7 @@ public class FinnhubService {
             }
         }
     }
+
+
 
 }

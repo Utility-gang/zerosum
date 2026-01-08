@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.utilitygang.zerosum.data.PriceData;
 import com.utilitygang.zerosum.model.Company;
@@ -17,7 +21,12 @@ import org.json.JSONObject;
 
 public class FinnhubClient extends WebSocketClient {
     private final CompanyRepository companyRepository;
+
     private final FinnhubService finnhubService;
+
+    private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
+
+    private final ExecutorService tradeProcessor = Executors.newSingleThreadExecutor();
 
     public FinnhubClient(URI serverUri, CompanyRepository companyRepository, FinnhubService finnhubService) {
         super(serverUri);
@@ -27,6 +36,9 @@ public class FinnhubClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
+        // start working on the queue
+        startProcessingTrades();
+
         List<Company> companies = companyRepository.findAll();
         for (Company company : companies) {
             String query = String.format("{\"type\":\"subscribe\",\"symbol\":\"%s\"}", company.getSymbol());
@@ -35,14 +47,41 @@ public class FinnhubClient extends WebSocketClient {
         System.out.println("new websocket connection opened");
     }
 
+    // process trades from the queue until there are none left
+    public void startProcessingTrades() {
+        tradeProcessor.submit(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    String rawJson = messageQueue.take();
+                    processTrades(rawJson);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
+    }
+
     @Override
     public void onClose(int code, String reason, boolean remote) {
+        stopProcessingTrades();
+
         System.out.println("closed with exit code " + code + " additional info: " + reason);
         finnhubService.openWebsocketConnection();
     }
 
+    // close the process
+    public void stopProcessingTrades() {
+        tradeProcessor.shutdownNow();
+    }
+
+    // instead of processing each trade on message, add it to the queue to be
+    //processed
     @Override
     public void onMessage(String response) {
+        messageQueue.add(response);
+    }
+
+    private void processTrades(String response) {
         // get the head of the JSON object
         JSONObject root = new JSONObject(response);
 
