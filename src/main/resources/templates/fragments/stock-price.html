@@ -1,0 +1,17 @@
+<span th:fragment="stock-price (price, direction)"
+      th:classappend="${
+        direction == 'UP'   ? ' text-red-600' :
+        direction == 'DOWN' ? ' text-green-600' :
+        ' text-gray-500'
+      }"
+      class="font-mono text-sm transition-colors duration-300"
+>
+
+    <span th:switch="${direction}">
+        <span th:case="'UP'">▲</span>
+        <span th:case="'DOWN'">▼</span>
+        <span th:case="*">▬</span>
+    </span>
+
+    <span th:text="${#numbers.formatCurrency(price)}"></span>
+</span>
