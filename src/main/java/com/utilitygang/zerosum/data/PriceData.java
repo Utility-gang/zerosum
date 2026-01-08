@@ -3,6 +3,7 @@ package com.utilitygang.zerosum.data;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -74,5 +75,9 @@ public class PriceData {
         Double total = pricePerUnit * quantity;
 
         return new BigDecimal(total);
+    }
+
+    public static Double getStockAmountForMoney(String symbol, BigDecimal money) {
+        return money.divide(getPrice(symbol), 2, RoundingMode.HALF_UP).doubleValue();
     }
 }
