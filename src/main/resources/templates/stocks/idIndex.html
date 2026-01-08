@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title th:if="${company}" th:text="|ZeroSum - ${company.symbol} Profile|"></title>
+		<title th:unless="${company}" th:text="|ZeroSum - Company Profile|"></title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+		<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+	</head>
+
+	<body class="bg-gray-50 min-h-screen">
+		<!-- Include navbar -->
+		<div th:replace="~{fragments/navbar.html :: navbar}"></div>
+
+		<!-- Main Content -->
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg: px-8 py-8">
+			<!-- Hero Section -->
+			<div th:if="${company}" class="mb-8">
+				<h1 class="text-4xl font-bold text-gray-900 mb-2" th:text="|${company.symbol} Profile|"></h1>
+				<p class="text-gray-600" th:text="|View the performance of ${company.symbol}|"></p>
+			</div>
+			<div th:unless="${company}" class="mb-8">
+				<h1 class="text-4xl font-bold text-gray-900 mb-2" th:text="|Stock Profile|"></h1>
+				<p class="text-gray-600" th:text="|View the performance of a specific Stock|"></p>
+			</div>
+
+			<div th:replace="~{fragments/flash.html :: flash}"></div>
+
+			<div th:if="${company}" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+				<div class="p-4 sm:p-6">
+					<div class="w-1/2 mx-auto flex flex-col text-center">
+						<div th:if="${pricesJson}" id="chart"></div>
+						<div th:if="${pricesJson}" id="live-chart" th:attr="hx-get='/stocks/' + ${company.symbol} + '/live'" hx-trigger="every 1s" hx-swap="none" hx-vals='js:{"since": lastTime}'></div>
+						<img th:unless="${pricesJson}" th:src="${company.logo}">
+						<p th:unless="${pricesJson}" th:text="${company.symbol}"></p>
+						<p th:unless="${pricesJson}" th:text="${company.currPrice}"></p>
+					</div>
+
+					<div class="w-1/2 mx-auto grid place-items-center">
+						<div class="w-1/2">
+							<div th:replace="~{fragments/buy-button.html :: buy-button(${user.getCash()})}"></div>
+						</div>
+
+						<div class="w-1/2">
+							<div th:replace="~{fragments/sell-button.html :: sell-button}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Empty State -->
+			<div th:unless="${company}" class="text-center py-12">
+				<svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-. 707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+				</svg>
+				<h3 class="mt-2 text-sm font-medium text-gray-900">No stocks available</h3>
+				<p class="mt-1 text-sm text-gray-500">Check back later for available stocks.</p>
+			</div>
+		</div>
+		<script th:inline="javascript" th:if="${pricesJson}">
+			let lastTime = /*[[${lastPrice}]]*/;
+			const chart = LightweightCharts.createChart(document.getElementById('chart'), { width: 600, height: 300 });
+			const lineSeries = chart.addSeries(LightweightCharts.LineSeries);
+			const data = JSON.parse(/*[[${pricesJson}]]*/);
+			lineSeries.setData(data);
+			
+			document.body.addEventListener('htmx:afterRequest', function updateChart(event) {
+				const newData = JSON.parse(event.detail.xhr.responseText);
+				if (newData.length === 0) return;
+				
+				// append each new point
+				newData.forEach(point => {
+					console.log("point.time:", point.time, typeof point.time);
+					lineSeries.update({
+						time: Number(point.time),
+						value: point.value
+						});
+						lastTime = Number(point.time);
+						});
+						});
+						
+						document.body.addEventListener('htmx:configRequest', function updateChart(event) {
+							event.detail.parameters.since = lastTime;
+							});
+		</script>
+	</body>
+</html>

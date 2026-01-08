@@ -13,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.Map;
-
 @Controller
 public class IndexController {
 
@@ -28,8 +26,6 @@ public class IndexController {
     public String indexAndPortfolio(Model model, @AuthenticationPrincipal DefaultOidcUser principal,
             HttpServletRequest req) {
 
-        Map<String, Double> holdingsAmounts = new java.util.HashMap<>();
-
         // use this to do the couple of changes in logic
         boolean isRoot = req.getRequestURI().equals("/");
 
@@ -42,22 +38,16 @@ public class IndexController {
         model.addAttribute("isAuthenticated", isAuthenticated);
         if (isAuthenticated) {
             User user = userContextService.getUser(principal);
-
             if (user != null) {
-                holdingsAmounts = userContextService.getUserHoldings(user);
-
                 // add all the companies that the user has bought
                 if (!isRoot) {
                     model.addAttribute("companies", companyRepository.findAllByStockOwner(user));
                 }
-
                 model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(user));
                 model.addAttribute("user", user);
 
             }
         }
-
-        model.addAttribute("holdingsAmounts", holdingsAmounts);
 
         return "index";
     }

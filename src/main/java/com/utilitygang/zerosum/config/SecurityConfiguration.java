@@ -8,13 +8,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.utilitygang.zerosum.model.User;
 import com.utilitygang.zerosum.repository.UserRepository;
-
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +29,8 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/images/**", "/news", "/leaderboard").permitAll()
+                        .requestMatchers("/", "/images/**", "/stocks/*", "/news", "/leaderboard").permitAll()
+                        .requestMatchers("/stocks/*/buy", "/stocks/*/sell").authenticated()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler((request, response, authentication) -> {

@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import static com.utilitygang.zerosum.data.PriceData.getPriceForStockAmount;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class PortfolioService {
     private static final long INITIAL_DELAY =  10 * 60 * 100;
 
     @Autowired
-    private StockRepository stockRepository;
+    StockRepository stockRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -33,7 +31,7 @@ public class PortfolioService {
      */
     public BigDecimal calculateTotalStockValue(User user) {
         return stockRepository.findByOwner(user).stream()
-                .map(stock -> getPriceForStockAmount(stock.getCompany().getSymbol(), stock.getAmount()))
+                .map(stock -> PriceData.getPriceForStockAmount(stock.getCompany().getSymbol(), stock.getAmount()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

@@ -20,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class FinnhubClient extends WebSocketClient {
-
     private final CompanyRepository companyRepository;
 
     private final FinnhubService finnhubService;
@@ -97,16 +96,13 @@ public class FinnhubClient extends WebSocketClient {
         // which contains all the trade info
         JSONArray data = root.getJSONArray("data");
 
-        // get the trade at index 0 because sometimes it sends
-        // multiple but we hope (?) that the price doesnt change
-        // in that time
-        JSONObject trade = data.getJSONObject(0);
+        // go through all the trades
+        for (int i = 0; i < data.length(); ++i) {
+            JSONObject trade = data.getJSONObject(i);
 
-        // extract the symbol (ticker) and the price from the trade info
-        String symbol = trade.getString("s");
-        BigDecimal price = new BigDecimal(trade.getDouble("p"));
-
-        PriceData.setPrice(symbol, price);
+            // put values in price data specifically how we want them in the final graph
+            PriceData.setStock(trade.getString("s"), trade.getDouble("p"), trade.getLong("t") / 1000);
+        }
     }
 
     @Override

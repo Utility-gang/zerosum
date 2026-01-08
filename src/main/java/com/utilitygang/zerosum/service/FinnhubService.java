@@ -1,10 +1,14 @@
 package com.utilitygang.zerosum.service;
 
 import com.utilitygang.zerosum.client.FinnhubClient;
+import com.utilitygang.zerosum.data.PriceData;
 import com.utilitygang.zerosum.model.Company;
 import com.utilitygang.zerosum.repository.CompanyRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.context.annotation.Profile;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
@@ -23,10 +28,11 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Profile("!test")
 public class FinnhubService {
+    @Autowired
+    CompanyRepository companyRepository;
 
     private static final String DEFAULT_LOGO_URL = "/images/default-stock.jpg";
 
-    private final CompanyRepository companyRepository;
     private final String finnhubKey;
     private final OpenAiService openAiService;
     private final URI uri;
@@ -40,12 +46,18 @@ public class FinnhubService {
         this.uri = new URI(String.format("wss://ws.finnhub.io?token=%s", finnhubKey));
     }
 
+    // when the app starts up, open the websocketConnection
     @PostConstruct
     public void init() throws Exception {
         openWebsocketConnection();
         hydrateMissingLogos();
         hydrateMissingDescriptions();
         updateCachedPrices();
+    }
+
+    @PreDestroy
+    public void saveCachedPrices() {
+        PriceData.serialise();
     }
 
     // when the app starts up, open the websocketConnection
@@ -65,19 +77,23 @@ public class FinnhubService {
 
     // when the app starts up, send GET requests to the quote endpoint
     // and update the cached price
-
     public void updateCachedPrices() throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
+        File f = new File("prices.json");
+        if (f.exists()) {
+            PriceData.deserialise();
+        } else {
+            RestTemplate restTemplate = new RestTemplate();
 
-        for (Company company : companyRepository.findAll()) {
-            String url = String.format("https://finnhub.io/api/v1/quote?symbol=%s&token=%s", company.getSymbol(),
-                    finnhubKey);
+            for (Company company : companyRepository.findAll()) {
+                String url = String.format("https://finnhub.io/api/v1/quote?symbol=%s&token=%s", company.getSymbol(),
+                        finnhubKey);
 
-            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-            if (response != null && response.containsKey("c")) {
-                Double currentPrice = Double.valueOf(response.get("c").toString());
-                company.setCachedPrice(BigDecimal.valueOf(currentPrice));
-                companyRepository.save(company);
+                Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+                if (response != null && response.containsKey("c")) {
+                    Double currentPrice = Double.valueOf(response.get("c").toString());
+                    company.setCachedPrice(BigDecimal.valueOf(currentPrice));
+                    companyRepository.save(company);
+                }
             }
         }
     }
@@ -151,5 +167,7 @@ public class FinnhubService {
             }
         }
     }
+
+
 
 }
