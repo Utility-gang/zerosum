@@ -42,6 +42,9 @@ public class StockController {
     @GetMapping("/stocks/{company_id}")
     public String stocksIdPage(@PathVariable String company_id, RedirectAttributes attr,
             @AuthenticationPrincipal DefaultOidcUser principal, Model model) throws Exception {
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+
         User owner = userContextService.getUser(principal);
         Company company = companyRepo.findById(company_id).orElse(null);
         if (company == null) {
