@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class LeaderboardService {
-    private static final BigDecimal STARTING_CASH = new BigDecimal(50000.0);
+    private static final BigDecimal STARTING_CASH = new BigDecimal(5000.0);
 
     public List<User> calculateLosses(List<User> topUsers) {
         for (User user : topUsers) {
