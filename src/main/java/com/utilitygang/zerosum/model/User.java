@@ -19,9 +19,20 @@ public class User {
     // BigDecimal is the best to use for currency apparently
     private BigDecimal cash;
 
+    private BigDecimal portfolioValue;
+
+    @Transient
+    private BigDecimal loss;
+
+    @Transient
+    private Float percentageLoss;
+
     public User(String username) {
         this.username = username;
-        this.cash = BigDecimal.valueOf(1000.0);
+        this.cash = new BigDecimal(50000.0);
+        this.portfolioValue = new BigDecimal(50000.0);
+        this.loss = new BigDecimal(0.0);
+        this.percentageLoss = new Float(0.0);
     }
 
     public User() {

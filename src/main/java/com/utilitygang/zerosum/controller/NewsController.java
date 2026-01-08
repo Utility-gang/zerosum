@@ -62,8 +62,10 @@ public class NewsController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
         // Add portfolio value for navbar
-        if (principal != null) {
+        if (isAuthenticated) {
             User user = userContextService.getUser(principal);
 
             if (user != null) {

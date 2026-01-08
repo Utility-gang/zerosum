@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroSum - Leaderboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Include navbar -->
+    <div th:replace="~{fragments/navbar.html :: navbar}"></div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg: px-8 py-8 flex-grow">
+        <!-- Hero Section -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Leaderboard</h1>
+            <p class="text-gray-600">The all-time biggest losers</p>
+        </div>
+
+        <!-- Leaderboard table -->
+        <div th:replace="~{fragments/leaderboard-table.html :: leaderboard}"></div>
+
+    </div>
+
+    <!-- Include footer -->
+    <div th:replace="~{fragments/footer.html :: footer}"></div>
+</body>
