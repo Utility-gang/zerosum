@@ -45,21 +45,28 @@
 
             <!-- Portfolio Value Badge -->
             <div th:if="${totalPortfolioValue != null}"
-                 class="hidden md:flex items-center gap-3 bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 text-white px-5 py-1.5 rounded-xl shadow-lg hover:shadow-2xl transform hover: scale-105 transition-all duration-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div class="flex gap-3">
-                    <div class="flex flex-col">
-                        <span class="text-xs font-medium opacity-90">Portfolio Value:</span>
-                        <span th:text="${totalPortfolioValue}" class="text-lg font-bold">$0.00</span>
+                 class="hidden md:flex items-center bg-gray-800/50 backdrop-blur-md border border-gray-700 rounded-xl px-4 py-1.5 gap-4 shadow-inner">
+
+                <div class="flex items-center gap-2.5">
+                    <div class="p-1.5 bg-rose-500/10 rounded-lg">
+                        <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                        </svg>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-xs font-medium opacity-90">Available Cash:</span>
-                        <span th:text="${#numbers.formatCurrency(user.getCash())}" class="text-lg font-bold">$0.00</span>
+                        <span class="text-[10px] tracking-wider font-bold text-gray-400 leading-none">NET WORTH</span>
+                        <span th:text="${totalPortfolioValue}" class="text-lg font-bold text-white tracking-tight">$0.00</span>
                     </div>
                 </div>
+
+                <div class="h-8 w-[1px] bg-gray-700"></div>
+
+                <div class="flex flex-col">
+                    <span class="text-[10px] tracking-wider font-bold text-gray-400 leading-none">AVAILABLE CASH</span>
+                    <span th:text="${#numbers.formatCurrency(user.getCash())}" class="text-lg font-bold text-white tracking-tight">$0.00</span>
+                </div>
             </div>
+
 
             <!-- Mobile menu button -->
             <div class="md:hidden">
@@ -101,16 +108,32 @@
                     href="/logout">
                 Logout
             </a>
+
             <!-- Portfolio value for mobile -->
             <div th:if="${totalPortfolioValue != null}"
-                 class="mt-3 mx-3 p-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-lg">
-                <div>
-                    <div class="text-xs font-semibold opacity-90">Portfolio Value:</div>
-                    <div th:text="${totalPortfolioValue}" class="text-2xl font-bold mt-1">$0.00</div>
-                </div>
-                <div class="mt-2">
-                    <div class="text-xs font-semibold opacity-90">Available Cash:</div>
-                    <div th:text="${#numbers.formatCurrency(user.getCash())}" class="text-2xl font-bold mt-1">$0.00</div>
+                 class="mt-3 mx-2 p-3 bg-gray-900/60 backdrop-blur-xl border border-gray-700 rounded-xl shadow-lg">
+
+                <div class="flex items-center justify-between gap-2">
+
+                    <div class="flex items-center gap-3 flex-1">
+                        <div class="p-1.5 bg-rose-500/10 rounded-lg">
+                            <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                            </svg>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[12px] tracking-wider font-bold text-gray-400 leading-none">NET WORTH</span>
+                            <span th:text="${totalPortfolioValue}" class="text-lg font-bold text-white mt-0.5">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="h-8 w-[1px] bg-gray-700/50"></div>
+
+                    <div class="flex flex-col flex-1 pl-2">
+                        <span class="text-[12px] tracking-wider font-bold text-gray-400 leading-none ml-2.5">AVAILABLE CASH</span>
+                        <span th:text="${#numbers.formatCurrency(user.getCash())}" class="text-lg font-bold text-white mt-0.5 ml-2.5">$0.00</span>
+                    </div>
+
                 </div>
             </div>
         </div>
