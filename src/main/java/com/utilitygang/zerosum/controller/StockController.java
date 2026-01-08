@@ -36,19 +36,16 @@ public class StockController {
         if (owner.getCash().subtract(stock_value).compareTo(BigDecimal.ZERO) < 0) {
             attr.addFlashAttribute("msg", "You do not have enough money.");
         } else {
-            owner.setCash(owner.getCash().subtract(stock_value));
-            userRepo.save(owner);
-
             Stock stock;
             if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty()) {
                 stock = new Stock(amount, owner, companyRepo.findById(company_id).get());
             } else {
                 stock = stockRepo.findByOwnerAndCompanySymbol(owner, company_id).get();
                 stock.setAmount(stock.getAmount() + amount);
-                owner.setCash(owner.getCash().subtract(stock_value));
-                userRepo.save(owner);
             }
             stockRepo.save(stock);
+            owner.setCash(owner.getCash().subtract(stock_value));
+            userRepo.save(owner);
         }
         return "redirect:" + req.getHeader("Referer");
     }
@@ -70,7 +67,6 @@ public class StockController {
             } else {
                 owner.setCash(stock_value.add(owner.getCash()));
                 userRepo.save(owner);
-
                 if (stock.getAmount() - amount == 0) {
                     stockRepo.delete(stock);
                 } else {

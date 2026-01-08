@@ -21,8 +21,9 @@ public class PriceData {
     // because you always have a value to read even if a write has removed the value
     // a millisecond before you try to access it
     public static BigDecimal getPrice(String symbol) {
-        return prices.getOrDefault(symbol, new BigDecimal(0.0));
+        return prices.getOrDefault(symbol, new BigDecimal(1.0));
     }
+
 
     public static BigDecimal getPriceForStockAmount(String symbol, Double quantity) {
         Double pricePerUnit = getPrice(symbol).doubleValue();

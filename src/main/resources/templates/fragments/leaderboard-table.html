@@ -1,0 +1,76 @@
+<div th:fragment="leaderboard">
+<!--    desktop view-->
+    <div class="hidden md:block overflow-hidden rounded-lg border border-gray-200 shadow-md">
+        <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+            <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-4 font-medium text-gray-900">Rank</th>
+                <th scope="col" class="px-6 py-4 font-medium text-gray-900">User</th>
+                <th scope="col" class="px-6 py-4 font-medium text-gray-900">Portfolio Value</th>
+                <th scope="col" class="px-6 py-4 font-medium text-gray-900">Loss</th>
+                <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-right">Change</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 border-t border-gray-100">
+                <tr th:each="user, iterStat : ${topUsers}">
+                    <td class="px-6 py-4 font-bold"
+                        th:classappend="${iterStat.count == 1 ? 'text-yellow-500' : (iterStat.count == 2 ? 'text-gray-400' : (iterStat.count == 3 ? 'text-amber-600' : 'text-gray-600'))}"
+                        th:text="${iterStat.count}">
+                    </td>
+
+                    <td class="px-6 py-4 font-medium text-gray-900">
+                        <div class="max-w-[15ch] truncate" th:text="${user.username}" th:title="${user.username}"></div>
+                    </td>
+
+                    <td class="px-6 py-4" th:text="${#numbers.formatCurrency(user.portfolioValue)}"></td>
+
+                    <td class="px-6 py-4 font-medium"
+                        th:classappend="${user.loss > 0 ? 'text-red-600' : (user.loss < 0 ? 'text-green-600' : 'text-gray-400')}"
+                        th:text="${#numbers.formatCurrency(user.loss)}">
+                    </td>
+
+                    <td class="px-6 py-4 text-right">
+                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                              th:classappend="${user.loss > 0 ? 'bg-red-50 text-red-600' : (user.loss < 0 ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-500')}">
+                            <span th:text="${user.percentageLoss} + '%'"></span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<!--    mobile view-->
+    <div class="grid grid-cols-1 gap-4 md:hidden">
+        <div th:each="user, iterStat : ${topUsers}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-bold"
+                          th:classappend="${iterStat.count == 1 ? 'bg-yellow-100 text-yellow-700' : (iterStat.count == 2 ? 'bg-gray-200 text-gray-700' : (iterStat.count == 3 ? 'bg-amber-100 text-amber-800' : ''))}"
+                          th:text="${iterStat.count}">
+                    </span>
+                    <span class="font-bold text-gray-900 text-lg truncate max-w-[11ch]" th:text="${user.username}" th:title="${user.username}"></span>
+                </div>
+
+                <span class="rounded-full px-2.5 py-0.5 text-xs font-bold flex-shrink-0"
+                      th:classappend="${user.loss > 0 ? 'bg-red-50 text-red-600' : (user.loss < 0 ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-500')}"
+                      th:text="${user.percentageLoss} + '%'">
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 pt-2 border-t border-gray-50 text-sm">
+                <div>
+                    <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold text-[10px]">Portfolio</p>
+                    <p class="font-medium text-gray-900" th:text="${#numbers.formatCurrency(user.portfolioValue)}"></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold text-[10px]">Total Loss</p>
+                    <p class="font-medium"
+                       th:classappend="${user.loss > 0 ? 'text-red-600' : (user.loss < 0 ? 'text-green-600' : 'text-gray-400')}"
+                       th:text="${#numbers.formatCurrency(user.loss)}">
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
