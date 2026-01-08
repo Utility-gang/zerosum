@@ -75,4 +75,8 @@ public class PriceData {
 
         return new BigDecimal(total);
     }
+
+    public static Double getStockAmountForMoney(String symbol, BigDecimal money) {
+        return money.divide(getPrice(symbol)).doubleValue();
+    }
 }

@@ -25,7 +25,6 @@ import com.utilitygang.zerosum.model.*;
 import com.utilitygang.zerosum.repository.*;
 import com.utilitygang.zerosum.service.UserContextService;
 
-import static com.utilitygang.zerosum.data.PriceData.getPriceForStockAmount;
 
 @Controller
 public class StockController {
@@ -66,25 +65,30 @@ public class StockController {
     }
 
     @PostMapping("/stocks/{company_id}/buy")
-    public String stocksBuy(@PathVariable String company_id, @RequestParam(required = true) Double amount,
+    public String stocksBuy(@PathVariable String company_id, @RequestParam(required = true) BigDecimal money,
             RedirectAttributes attr, @AuthenticationPrincipal DefaultOidcUser principal, HttpServletRequest req) {
-        // get the stock value first thing
-        BigDecimal stock_value = getPriceForStockAmount(company_id, amount);
-        User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
-        // find out if the user can actually afford the stock or not
-        if (owner.getCash().subtract(stock_value).compareTo(BigDecimal.ZERO) < 0) {
-            attr.addFlashAttribute("msg", "You do not have enough money.");
+        // check there actually is a price for this stock
+        if (PriceData.getPrice(company_id).equals(BigDecimal.ZERO)) {
+            attr.addFlashAttribute("msg", "No price is available for this stock, likely because of the markets being closed. Please try again later.");
         } else {
-            Stock stock;
-            if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty()) {
-                stock = new Stock(amount, owner, companyRepo.findById(company_id).get());
+            // get the stock value first thing
+            Double amount = PriceData.getStockAmountForMoney(company_id, money);
+            User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
+            // find out if the user can actually afford the stock or not
+            if (owner.getCash().subtract(money).compareTo(BigDecimal.ZERO) < 0) {
+                attr.addFlashAttribute("msg", "You do not have enough money.");
             } else {
-                stock = stockRepo.findByOwnerAndCompanySymbol(owner, company_id).get();
-                stock.setAmount(stock.getAmount() + amount);
+                Stock stock;
+                if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty()) {
+                    stock = new Stock(amount, owner, companyRepo.findById(company_id).get());
+                } else {
+                    stock = stockRepo.findByOwnerAndCompanySymbol(owner, company_id).get();
+                    stock.setAmount(stock.getAmount() + amount);
+                }
+                stockRepo.save(stock);
+                owner.setCash(owner.getCash().subtract(money));
+                userRepo.save(owner);
             }
-            stockRepo.save(stock);
-            owner.setCash(owner.getCash().subtract(stock_value));
-            userRepo.save(owner);
         }
         return "redirect:" + req.getHeader("Referer");
     }
@@ -93,7 +97,7 @@ public class StockController {
     public String stocksSell(@PathVariable String company_id, @RequestParam(required = true) Double amount,
             RedirectAttributes attr, @AuthenticationPrincipal DefaultOidcUser principal, HttpServletRequest req) {
         // get the stock value first thing
-        BigDecimal stock_value = getPriceForStockAmount(company_id, amount);
+        BigDecimal stock_value = PriceData.getPriceForStockAmount(company_id, amount);
         User owner = userRepo.findUserByUsername((String) principal.getAttributes().get("email")).get();
         // find out if the user actually has those stocks or not
         if (stockRepo.findByOwnerAndCompanySymbol(owner, company_id).isEmpty()) {
