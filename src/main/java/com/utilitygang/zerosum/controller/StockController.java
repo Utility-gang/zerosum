@@ -2,6 +2,7 @@ package com.utilitygang.zerosum.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.utilitygang.zerosum.data.PriceData;
@@ -50,10 +51,14 @@ public class StockController {
             return "redirect:/stocks";
         }
         Stock stock = stockRepo.findByOwnerAndCompany(owner, company).orElse(new Stock(0.0, null, company));
+        Map<String, Double> holdings = userContextService.getUserHoldings(owner);
         model.addAttribute("user", owner);
         model.addAttribute("company", company);
         model.addAttribute("maxValue", stock.getAmount());
-        model.addAttribute("holdingsAmounts", userContextService.getUserHoldings(owner));
+        model.addAttribute("holdingsAmounts", holdings);
+        if (holdings.getOrDefault(company_id, 0.0) != 0.0) {
+            model.addAttribute("basePrice", holdings.get(company_id));
+        }
         model.addAttribute("totalPortfolioValue", userContextService.getUserPortfolioValue(owner));
         List<PriceData.Stock> prices = PriceData.getPrices(company_id);
         if (!prices.isEmpty()) {
