@@ -6,9 +6,8 @@ INSERT INTO companies (symbol, logo, description, tone_tag) VALUES
 ('ASTS', NULL, NULL, 'space_shenanigans'),
 ('LUNR', NULL, NULL, 'space_shenanigans'),
 
-('BINANCE:BTCUSDT', NULL, NULL, 'crypto_crunch'),
-('BINANCE:ETHUSDT', NULL, NULL, 'crypto_crunch'),
-('BINANCE:XRPUSDT', NULL, NULL, 'crypto_crunch'),
+('BINANCE:ETHUSDT', 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040', NULL, 'crypto_crunch'),
+('BINANCE:XRPUSDT', 'https://cryptologos.cc/logos/xrp-xrp-logo.png?v=040', NULL, 'crypto_crunch'),
 
 ('AMC',  NULL, NULL, 'meme_crash'),
 ('GME',  NULL, NULL, 'meme_crash'),
