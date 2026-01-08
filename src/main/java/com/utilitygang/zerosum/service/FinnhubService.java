@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Profile("!test")
@@ -28,28 +29,36 @@ public class FinnhubService {
     private final CompanyRepository companyRepository;
     private final String finnhubKey;
     private final OpenAiService openAiService;
+    private final URI uri;
+    private int timeout;
 
-    public FinnhubService(CompanyRepository companyRepository, OpenAiService openAiService) {
+    public FinnhubService(CompanyRepository companyRepository, OpenAiService openAiService) throws Exception {
         this.companyRepository = companyRepository;
         this.finnhubKey = Dotenv.load().get("FINNHUB_API_KEY");
         this.openAiService = openAiService;
+        this.timeout = 0;
+        this.uri = new URI(String.format("wss://ws.finnhub.io?token=%s", finnhubKey));
     }
 
-    // when the app starts up, open the websocketConnection
     @PostConstruct
     public void init() throws Exception {
         openWebsocketConnection();
         hydrateMissingLogos();
         hydrateMissingDescriptions();
-//        updateCachedPrices();
+        updateCachedPrices();
     }
 
     // when the app starts up, open the websocketConnection
 
-    public void openWebsocketConnection() throws Exception {
-        String url = String.format("wss://ws.finnhub.io?token=%s", finnhubKey);
-        URI uri = new URI(url);
-        FinnhubClient client = new FinnhubClient(uri, companyRepository);
+    public void openWebsocketConnection() {
+        try {
+            TimeUnit.SECONDS.sleep(timeout);
+            timeout = timeout == 0 ? 1 : timeout * 2;
+        } catch (Exception e) {
+            System.out.println("error sleeping");
+            return;
+        }
+        FinnhubClient client = new FinnhubClient(uri, companyRepository, this);
         client.connect();
     }
 
@@ -57,20 +66,21 @@ public class FinnhubService {
     // when the app starts up, send GET requests to the quote endpoint
     // and update the cached price
 
-//    public void updateCachedPrices() throws Exception {
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        for (Company company : companyRepository.findAll()) {
-//            String url = String.format("https://finnhub.io/api/v1/quote?symbol=%s&token=%s", company.getSymbol(), finnhubKey);
-//
-//            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-//            if (response != null && response.containsKey("c")) {
-//                Double currentPrice = Double.valueOf(response.get("c").toString());
-//                company.setCachedPrice(BigDecimal.valueOf(currentPrice));
-//                companyRepository.save(company);
-//            }
-//        }
-//    }
+    public void updateCachedPrices() throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        for (Company company : companyRepository.findAll()) {
+            String url = String.format("https://finnhub.io/api/v1/quote?symbol=%s&token=%s", company.getSymbol(),
+                    finnhubKey);
+
+            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+            if (response != null && response.containsKey("c")) {
+                Double currentPrice = Double.valueOf(response.get("c").toString());
+                company.setCachedPrice(BigDecimal.valueOf(currentPrice));
+                companyRepository.save(company);
+            }
+        }
+    }
 
     private void hydrateMissingLogos() {
         RestTemplate restTemplate = new RestTemplate();
@@ -83,8 +93,7 @@ public class FinnhubService {
             String symbol = company.getSymbol();
             String url = String.format(
                     "https://finnhub.io/api/v1/stock/profile2?symbol=%s&token=%s",
-                    symbol, finnhubKey
-            );
+                    symbol, finnhubKey);
 
             try {
                 Map<String, Object> profile = restTemplate.getForObject(url, Map.class);
@@ -116,7 +125,6 @@ public class FinnhubService {
         }
     }
 
-
     // OpenAI description hydration (tone-aware)
 
     private void hydrateMissingDescriptions() {
@@ -128,7 +136,7 @@ public class FinnhubService {
             try {
                 String description = openAiService.funnyStockDescription(
                         company.getSymbol(),
-                        company.getToneTag()      //  tone-driven humor
+                        company.getToneTag() // tone-driven humor
                 );
 
                 if (description != null && !description.isBlank()) {
@@ -143,7 +151,5 @@ public class FinnhubService {
             }
         }
     }
-
-
 
 }

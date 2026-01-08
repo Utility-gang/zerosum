@@ -2,10 +2,13 @@ package com.utilitygang.zerosum.controller;
 
 import java.math.BigDecimal;
 
+import com.utilitygang.zerosum.data.PriceData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,6 +79,24 @@ public class StockController {
             }
         }
         return "redirect:" + req.getHeader("Referer");
+    }
+
+    @GetMapping("/stocks/{company_id}/price")
+    public String stockPrice(@PathVariable String company_id, @RequestParam(required = false) BigDecimal lastPrice, Model model) {
+        BigDecimal newPrice = PriceData.getPrice(company_id);
+
+        String direction = "same";
+
+        if (lastPrice != null) {
+            int comparison = newPrice.compareTo(lastPrice);
+            if (comparison > 0) direction = "up";
+            else if (comparison < 0) direction = "down";
+        }
+
+        model.addAttribute("price", newPrice);
+        model.addAttribute("direction", direction);
+
+        return "fragments/stock-price :: stock-price";
     }
 
 }

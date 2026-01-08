@@ -6,6 +6,7 @@
     <title>ZeroSum - Home</title>
     <link rel="stylesheet" href="main.css"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
 
@@ -48,7 +49,7 @@
                 <!-- Stock Fragment (logo, symbol, price) -->
                 <div th:replace="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice})}"></div>
 
-                <!-- ✅ Tone tag + OpenAI description -->
+                <!-- Tone tag + OpenAI description -->
                 <div class="mt-3">
                     <span class="inline-block text-xs font-semibold px-2 py-1 rounded-full"
                           th:classappend="${
