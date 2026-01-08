@@ -1,7 +1,35 @@
-<div th:fragment="stock(logo, symbol, currPrice)">
-	<a th:href="@{/stocks/{symbol}(symbol=${symbol})}">
-		<img th:src="${logo}">
-		<p th:text="${symbol}"></p>
-		<p th:text="${#numbers.formatCurrency(currPrice)}"></p>
+<div th:fragment="stock(logo, symbol, currPrice, description, toneTag)"
+     th:with="
+       desc=${description != null ? description : (company != null ? company.description : (stock != null ? stock.description : null))},
+       tag=${toneTag != null ? toneTag : (company != null ? company.toneTag : (stock != null ? stock.toneTag : null))},
+       logoSrc=${logo != null ? logo : (company != null ? company.logo : (stock != null ? stock.logo : null))},
+       sym=${symbol != null ? symbol : (company != null ? company.symbol : (stock != null ? stock.symbol : null))},
+       price=${currPrice != null ? currPrice : (company != null ? company.currPrice : (stock != null ? stock.currPrice : null))}
+     ">
+	<a th:href="@{/stocks/{symbol}(symbol=${sym})}">
+		<img th:src="${logoSrc}">
+		<p th:text="${sym}"></p>
+		<p th:text="${#numbers.formatCurrency(price)}"></p>
 	</a>
+
+	<!-- OpenAI description (uses fallback desc variable) -->
+	<p class="mt-2 text-sm text-gray-600 italic leading-snug"
+	   th:text="${#strings.isEmpty(desc) ? 'Loading fresh disappointment…' : desc}">
+		Stock description
+	</p>
+
+	<!-- Tone tag (uses fallback tag variable) -->
+	<div class="mt-3" th:if="${tag != null}">
+		<span class="inline-block text-xs font-semibold px-2 py-1 rounded-full"
+			  th:classappend="${
+                (tag == 'meme_crash') ? ' bg-red-100 text-red-700' :
+                (tag == 'slow_bleed') ? ' bg-gray-200 text-gray-800' :
+                (tag == 'biotech_grinder') ? ' bg-purple-100 text-purple-700' :
+                (tag == 'hype_ev_burn') ? ' bg-orange-100 text-orange-700' :
+                ' bg-gray-100 text-gray-700'
+              }"
+			  th:text="${tag}">
+			tone
+		</span>
+	</div>
 </div>

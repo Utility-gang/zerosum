@@ -33,10 +33,13 @@
 				<div class="p-4 sm:p-6">
 					<div class="w-1/2 mx-auto flex flex-col text-center">
 						<div th:if="${pricesJson}" id="chart"></div>
-						<div th:if="${pricesJson}" id="live-chart" th:attr="hx-get='/stocks/' + ${company.symbol} + '/live'" hx-trigger="every 1s" hx-swap="none" hx-vals='js:{"since": lastTime}'></div>
-						<img th:unless="${pricesJson}" th:src="${company.logo}">
-						<p th:unless="${pricesJson}" th:text="${company.symbol}"></p>
-						<p th:unless="${pricesJson}" th:text="${company.currPrice}"></p>
+						<div th:if="${pricesJson}" id="live-chart"
+							 th:attr="hx-get=@{/stocks/{symbol}/live(symbol=${company.symbol})}"
+							 hx-trigger="every 1s"
+							 hx-swap="none"></div>
+
+						<!-- Stock fragment (logo, symbol, price, description, toneTag) -->
+						<div class="w-full" th:insert="~{fragments/stock.html :: stock(${company.logo}, ${company.symbol}, ${company.currPrice}, ${company.description}, ${company.toneTag})}"></div>
 					</div>
 
 					<div class="w-1/2 mx-auto grid place-items-center">
@@ -66,11 +69,11 @@
 			const lineSeries = chart.addSeries(LightweightCharts.LineSeries);
 			const data = JSON.parse(/*[[${pricesJson}]]*/);
 			lineSeries.setData(data);
-			
+
 			document.body.addEventListener('htmx:afterRequest', function updateChart(event) {
 				const newData = JSON.parse(event.detail.xhr.responseText);
 				if (newData.length === 0) return;
-				
+
 				// append each new point
 				newData.forEach(point => {
 					console.log("point.time:", point.time, typeof point.time);
@@ -81,7 +84,7 @@
 						lastTime = Number(point.time);
 						});
 						});
-						
+
 						document.body.addEventListener('htmx:configRequest', function updateChart(event) {
 							event.detail.parameters.since = lastTime;
 							});
