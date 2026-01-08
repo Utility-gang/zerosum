@@ -22,6 +22,7 @@ import org.json.JSONObject;
 public class FinnhubClient extends WebSocketClient {
 
     private final CompanyRepository companyRepository;
+
     private final FinnhubService finnhubService;
 
     private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
