@@ -28,13 +28,13 @@
                 </a>
                 <a
                         th:unless="${isAuthenticated}"
-                        class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
+                        class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
                         href="/oauth2/authorization/okta">
                     Login/Register
                 </a>
                 <a
                         th:if="${isAuthenticated}"
-                        class="text-gray-300 hover:text-white hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
+                        class="text-gray-300 hover:text-white hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
                         href="/logout">
                     Logout
                 </a>
@@ -42,15 +42,19 @@
 
             <!-- Portfolio Value Badge -->
             <div th:if="${totalPortfolioValue != null}"
-                 class="hidden md:flex items-center gap-3 bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 text-white px-5 py-2.5 rounded-xl shadow-lg hover:shadow-2xl transform hover: scale-105 transition-all duration-200">
+                 class="hidden md:flex items-center gap-3 bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 text-white px-5 py-1.5 rounded-xl shadow-lg hover:shadow-2xl transform hover: scale-105 transition-all duration-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <div class="flex flex-col">
-                    <span class="text-xs font-medium opacity-90">Total Portfolio Value:</span>
-                    <span th:text="${totalPortfolioValue}" class="text-lg font-bold">$0.00</span>
-                    <span class="text-xs font-medium opacity-90">Available cash to invest:</span>
-                    <span th:text="${userCash}" class="text-lg font-bold">$0.00</span>
+                <div class="flex gap-3">
+                    <div class="flex flex-col">
+                        <span class="text-xs font-medium opacity-90">Portfolio Value:</span>
+                        <span th:text="${totalPortfolioValue}" class="text-lg font-bold">$0.00</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xs font-medium opacity-90">Available Cash:</span>
+                        <span th:text="${userCash}" class="text-lg font-bold">$0.00</span>
+                    </div>
                 </div>
             </div>
 
@@ -94,10 +98,14 @@
             <!-- Portfolio value for mobile -->
             <div th:if="${totalPortfolioValue != null}"
                  class="mt-3 mx-3 p-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-lg">
-                <div class="text-xs font-semibold opacity-90">Total Portfolio Value:</div>
-                <div th:text="${totalPortfolioValue}" class="text-2xl font-bold mt-1">$0.00</div>
-                <div class="text-xs font-semibold opacity-90">Available cash to invest:</div>
-                <div th:text="${userCash}" class="text-2xl font-bold mt-1">$0.00</div>
+                <div>
+                    <div class="text-xs font-semibold opacity-90">Portfolio Value:</div>
+                    <div th:text="${totalPortfolioValue}" class="text-2xl font-bold mt-1">$0.00</div>
+                </div>
+                <div class="mt-2">
+                    <div class="text-xs font-semibold opacity-90">Available Cash:</div>
+                    <div th:text="${userCash}" class="text-2xl font-bold mt-1">$0.00</div>
+                </div>
             </div>
         </div>
     </div>
