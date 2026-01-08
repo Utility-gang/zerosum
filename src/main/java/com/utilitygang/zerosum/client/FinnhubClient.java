@@ -8,6 +8,8 @@ import java.util.Objects;
 import com.utilitygang.zerosum.data.PriceData;
 import com.utilitygang.zerosum.model.Company;
 import com.utilitygang.zerosum.repository.CompanyRepository;
+import com.utilitygang.zerosum.service.FinnhubService;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
@@ -16,10 +18,12 @@ import org.json.JSONObject;
 public class FinnhubClient extends WebSocketClient {
 
     private final CompanyRepository companyRepository;
+    private final FinnhubService finnhubService;
 
-    public FinnhubClient(URI serverUri, CompanyRepository companyRepository) {
+    public FinnhubClient(URI serverUri, CompanyRepository companyRepository, FinnhubService finnhubService) {
         super(serverUri);
         this.companyRepository = companyRepository;
+        this.finnhubService = finnhubService;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class FinnhubClient extends WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         System.out.println("closed with exit code " + code + " additional info: " + reason);
+        finnhubService.openWebsocketConnection();
     }
 
     @Override

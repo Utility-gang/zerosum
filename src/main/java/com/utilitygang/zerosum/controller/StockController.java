@@ -81,23 +81,16 @@ public class StockController {
         return "redirect:" + req.getHeader("Referer");
     }
 
-    // enum for whether price is going up down or staying the same
-    public enum PriceDirection {
-        UP,
-        DOWN,
-        FLAT
-    }
-
     @GetMapping("/stocks/{company_id}/price")
     public String stockPrice(@PathVariable String company_id, @RequestParam(required = false) BigDecimal lastPrice, Model model) {
         BigDecimal newPrice = PriceData.getPrice(company_id);
 
-        PriceDirection direction = PriceDirection.FLAT;
+        String direction = "same";
 
         if (lastPrice != null) {
-            int cmp = newPrice.compareTo(lastPrice);
-            if (cmp > 0) direction = PriceDirection.UP;
-            else if (cmp < 0) direction = PriceDirection.DOWN;
+            int comparison = newPrice.compareTo(lastPrice);
+            if (comparison > 0) direction = "up";
+            else if (comparison < 0) direction = "down";
         }
 
         model.addAttribute("price", newPrice);
