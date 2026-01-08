@@ -16,4 +16,6 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
                 where s.owner = :owner
             """)
     List<Company> findAllByStockOwner(@Param("owner") User owner);
+
+    List<Company> findAllByOrderBySymbolAsc();
 }
