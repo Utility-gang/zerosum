@@ -32,6 +32,10 @@
 			<div th:if="${company}" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
 				<div class="p-4 sm:p-6">
 					<div class="w-1/2 mx-auto flex flex-col text-center">
+						<div th:if="${pricesJson}">
+							<button onclick="showLast60m()">Show last hour</button>
+							<button onclick="showLast5m()">Show current</button>
+						</div>
 						<div th:if="${pricesJson}" id="chart"></div>
 						<div th:if="${pricesJson}" id="live-chart" th:attr="hx-get='/stocks/' + ${company.symbol} + '/live'" hx-trigger="every 1s" hx-swap="none" hx-vals='js:{"since": lastTime}'></div>
 						<img th:unless="${pricesJson}" th:src="${company.logo}">
@@ -62,10 +66,13 @@
 		</div>
 		<script th:inline="javascript" th:if="${pricesJson}">
 			let lastTime = /*[[${lastPrice}]]*/;
-			const chart = LightweightCharts.createChart(document.getElementById('chart'), { width: 600, height: 300 });
-			const lineSeries = chart.addSeries(LightweightCharts.LineSeries);
+            let viewMode = 0;
+            const chart = LightweightCharts.createChart(document.getElementById('chart'), {width: 800,height: 400,});
+			const lineSeries = chart.addSeries(LightweightCharts.BaselineSeries, { baseValue: { type: 'price', price: /*[[${basePrice}]]*/ }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
 			const data = JSON.parse(/*[[${pricesJson}]]*/);
 			lineSeries.setData(data);
+			
+            showLast5m();
 			
 			document.body.addEventListener('htmx:afterRequest', function updateChart(event) {
 				const newData = JSON.parse(event.detail.xhr.responseText);
@@ -77,14 +84,38 @@
 					lineSeries.update({
 						time: Number(point.time),
 						value: point.value
-						});
-						lastTime = Number(point.time);
-						});
-						});
+					});
 						
-						document.body.addEventListener('htmx:configRequest', function updateChart(event) {
-							event.detail.parameters.since = lastTime;
-							});
+                    lastTime = Number(point.time);
+                    if (viewMode == 1) {
+                        showLast60m();
+                    } else {
+                        showLast5m();
+                    }
+				});
+			});
+						
+			document.body.addEventListener('htmx:configRequest', function updateChart(event) {
+				event.detail.parameters.since = lastTime;
+			});
+
+            function showLast5m() {
+                const now = Math.floor(Date.now() / 1000);
+                chart.timeScale().setVisibleRange({
+                    from: now - 5 * 60,
+                    to: now,
+                });
+                viewMode = 0;
+            }
+            
+            function showLast60m() {
+                const now = Math.floor(Date.now() / 1000);
+                chart.timeScale().setVisibleRange({
+                    from: now - 60 * 60,
+                    to: now,
+                });
+                viewMode = 1;
+            }
 		</script>
 	</body>
 </html>
