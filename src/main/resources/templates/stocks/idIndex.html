@@ -29,27 +29,32 @@
 
 			<div th:replace="~{fragments/flash.html :: flash}"></div>
 
-			<div th:if="${company}" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-				<div class="p-4 sm:p-6">
-					<div class="w-1/2 mx-auto flex flex-col text-center">
-						<div th:if="${pricesJson}" id="chart"></div>
-						<div th:if="${pricesJson}" id="live-chart" th:attr="hx-get='/stocks/' + ${company.symbol} + '/live'" hx-trigger="every 1s" hx-swap="none" hx-vals='js:{"since": lastTime}'></div>
-						<img th:unless="${pricesJson}" th:src="${company.logo}">
-						<p th:unless="${pricesJson}" th:text="${company.symbol}"></p>
-						<p th:unless="${pricesJson}" th:text="${company.currPrice}"></p>
-					</div>
-
-					<div class="w-1/2 mx-auto grid place-items-center">
-						<div class="w-1/2">
-							<div th:replace="~{fragments/buy-button.html :: buy-button(${user.getCash()})}"></div>
-						</div>
-
-						<div class="w-1/2">
-							<div th:replace="~{fragments/sell-button.html :: sell-button}"></div>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div th:if="${company}" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-auto">
+                <div class="p-4 sm:p-6 flex flex-col items-center">
+                    <!-- Chart Section -->
+                    <div class="w-full sm:max-w-[50%] mx-auto" th:if="${pricesJson}" id="chart"></div>
+                    <div class="w-full sm:max-w-[50%] mx-auto" th:if="${pricesJson}" id="live-chart"
+                         th:attr="hx-get='/stocks/' + ${company.symbol} + '/live'"
+                         hx-trigger="every 1s"
+                         hx-swap="none"
+                         hx-vals='js:{"since": lastTime}'></div>
+            
+                    <!-- Fallback Company Info -->
+                    <img th:unless="${pricesJson}" th:src="${company.logo}" class="w-24 h-24 sm:w-32 sm:h-32 mx-auto mt-4">
+                    <p th:unless="${pricesJson}" th:text="${company.symbol}" class="text-lg font-semibold mt-2"></p>
+                    <p th:unless="${pricesJson}" th:text="${company.currPrice}" class="text-gray-600"></p>
+            
+                    <!-- Buy/Sell Buttons -->
+                    <div class="mt-6 w-full sm:max-w-[50%] mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="w-full">
+                            <div th:replace="~{fragments/buy-button.html :: buy-button(${user.getCash()})}"></div>
+                        </div>
+                        <div class="w-full">
+                            <div th:replace="~{fragments/sell-button.html :: sell-button}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 			<!-- Empty State -->
 			<div th:unless="${company}" class="text-center py-12">
@@ -62,7 +67,8 @@
 		</div>
 		<script th:inline="javascript" th:if="${pricesJson}">
 			let lastTime = /*[[${lastPrice}]]*/;
-            const chart = LightweightCharts.createChart(document.getElementById('chart'), {width: 400,height: 400,});
+            let chartContainer = document.getElementById('chart');
+            const chart = LightweightCharts.createChart(document.getElementById('chart'), {width: chartContainer.clientWidth,height: 400,});
 			const lineSeries = chart.addSeries(LightweightCharts.BaselineSeries, { baseValue: { type: 'price', price: /*[[${basePrice}]]*/ }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
 			const data = JSON.parse(/*[[${pricesJson}]]*/);
 			lineSeries.setData(data);
@@ -97,6 +103,11 @@
 			document.body.addEventListener('htmx:configRequest', function updateChart(event) {
 				event.detail.parameters.since = lastTime;
 			});
+
+            window.addEventListener('resize', () => {
+                chartContainer = document.getElementById('chart');
+                chart.resize(chartContainer.clientWidth, 400);
+            });
 		</script>
 	</body>
 </html>
