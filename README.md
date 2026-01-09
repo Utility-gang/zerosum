@@ -1,12 +1,12 @@
-# zerosum
+# ZeroSum
 
-zerosum is a platform to invest with the goal of losing all of your starting funds.
+ZeroSum is a trading platform with the goal of losing all of your starting funds.
 
-It contains a fixed collection of stocks, that we choose, and you have to invest your
+It contains a fixed collection of stocks, and you have to invest your
 fake money into those. The stocks are updated live, and you can buy/sell them
-from each stock's page. 
+from each stock's page. Your available cash will be updated accordingly.
 
-When you buy, it will be added to your portfolio.
+When you buy stock units, they will be added to your portfolio.
 
 On each stock page, there is a graph of the live stock price. We only store very
 recent events, because we intentionally designed this app for high-frequency
