@@ -1,26 +1,26 @@
 # zerosum
 
-zerosum (temp name?) is a platform to invest with the goal of losing all of your starting funds.
+zerosum is a platform to invest with the goal of losing all of your starting funds.
 
-it contains a fixed collection of stocks, that we choose, and you have to invest your
-fake money into those. the stocks are updated live, and you can buy/sell them
+It contains a fixed collection of stocks, that we choose, and you have to invest your
+fake money into those. The stocks are updated live, and you can buy/sell them
 from each stock's page. 
 
-when you buy, it will be added to your portfolio.
+When you buy, it will be added to your portfolio.
 
-on each stock page, there is a graph of the live stock price. we only store very
-recent events, because we intentially designed this app for high-frequency
-trading. cool slider bar courtesy of Thomas + Shaki
+On each stock page, there is a graph of the live stock price. We only store very
+recent events, because we intentionally designed this app for high-frequency
+trading. You can choose how much to buy/sell with a cool slider bar (courtesy of Thomas + Shaki).
 
-to make it even more fun, there's a leaderboard page, so you can see how good
-you are at losing money :)
+To make it even more fun, there's a leaderboard page, so you can see how good
+you are at losing money :).
 
-in case you've had too much fun, you can always have a look at the news page.
-have a look at interest rate cuts or whatever financial people read normally.
+In case you've had too much fun, you can always have a look at the news page.
+Have a look at interest rate cuts or whatever financial people read normally.
 
 ## tech stack
 
-this project uses java, mavern, springbot, and postgresql to run. additionally, you need an auth0 application setup. it also loads htmx and lightweight charts automatically, when needed.
+This project uses Java, Maven, Springboot, and PostgreSQL to run. additionally, you need an Auth0 application setup. it also loads HTMX and Lightweight Charts automatically, when needed.
 
 ## running
 
@@ -37,7 +37,7 @@ FINNHUB_API_KEY=
 OPENAI_API_KEY=
 ```
 
-then install mavern and postgresql (make sure it's running). then, create a new table called zerosum using this command:
+then install Maven and PostgreSQL (make sure it's running). Then, create a new table called zerosum using this command:
 
 ```
 createdb zerosum
@@ -57,13 +57,13 @@ mvn test
 
 ## what does our server actually do?
 
-there's many components, but it boils down to these main ones:
+There's many components, but it boils down to these main ones:
 
  - finnhub websocket controller to get live stock info from finnhub, and put it
    into our structures
  - controllers for the web interface
  - a REST api (PriceController) to send live updates from the server to any connected client's chart
- - openai (idk much about this one)
+ - OpenAI structured outputs for funny summaries of the different companies
  - PriceData which handles storing all the stocks, as well as caching them to
- disk
+   disk
  - NewsService which handles caching and parsing news data from finnhub
